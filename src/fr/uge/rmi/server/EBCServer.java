@@ -5,6 +5,7 @@ import java.rmi.registry.LocateRegistry;
 
 import fr.uge.rmi.common.Bike;
 import fr.uge.rmi.common.IBikeDB;
+import fr.uge.rmi.common.IUGEDB;
 
 public class EBCServer {
     public static void main(String args[]) {
@@ -19,8 +20,8 @@ public class EBCServer {
             bikeDB.addBike(new Bike(ugedb.getId("Nader").get(), 8.80F, 3));
             bikeDB.addBike(new Bike(ugedb.getId("Nader").get(), 11.80F, 4));
 
-            Naming.rebind("rmi://localhost:1099/EiffelBikeCorpService/ConnectPage", ugedb);
-            Naming.rebind("rmi://localhost:1099/EiffelBikeCorpService/bikesPage", bikeDB);
+           /* Naming.rebind("UGEDB", ugedb);*/
+            Naming.rebind("BikeDB", bikeDB);
 
         } catch(Exception e){
             System.out.println("Exception:" + e);

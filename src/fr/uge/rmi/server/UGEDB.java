@@ -14,10 +14,10 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
     record UGEUser(String user, String password){
 
         public boolean isUser(String name) {
-            return name == user;
+            return name.equals(user);
         }
         public boolean isPassword(String pwd) {
-            return pwd == password;
+            return pwd.equals(password);
         }
     }
 
@@ -37,7 +37,7 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
                 "Orhan", "Loris", "Xavit", "Sami", "Bryan", "Jimmy", "Fredo", "Rym", "Coco"};
 
         for (int i = 0; i < 20; i++) {
-            users.put((long) i, new UGEUser(name[i], "password"));
+            users.put((long) i, new UGEUser(name[i], "pwd"));
         }
     }
 

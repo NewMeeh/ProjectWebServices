@@ -10,6 +10,7 @@ public interface IBikeDB extends Remote {
     int rent(Bike bike, long userId) throws RemoteException;
     void rank(Bike bike, int grade) throws RemoteException;
     void turnIn(Bike bike, long userId) throws RemoteException;
+    void displayBikes() throws RemoteException;
 
 
 }
