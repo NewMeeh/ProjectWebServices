@@ -1,10 +1,11 @@
 package fr.uge.rmi.server;
 
-import fr.uge.rmi.comon.IUGEDB;
+import fr.uge.rmi.common.IUGEDB;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class UGEDB extends UnicastRemoteObject implements IUGEDB {
@@ -42,9 +43,9 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
 
 
     @Override
-    public Boolean login(String user, String password) throws RemoteException {
-        for(Entry<Long, UGEUser> user : users.entrySet()) {
-            if(user.getValue().isUSer(name) && user.getValue().isPassword(password)) {
+    public boolean login(String name, String password) throws RemoteException {
+        for(Map.Entry<Long, UGEUser> user : users.entrySet()) {
+            if(user.getValue().isUser(name) && user.getValue().isPassword(password)) {
                 return true;
             }
         }
@@ -52,9 +53,9 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
     }
 
     public Optional<Long> getId(String name) {
-        for(Entry<Long, UGEUser> user : users.entrySet()) {
-            if(user.getValue().isUSer(name)) {
-                return user.getKey();
+        for(Map.Entry<Long, UGEUser> user : users.entrySet()) {
+            if(user.getValue().isUser(name)) {
+                return Optional.ofNullable(user.getKey());
             }
         }
         return null;

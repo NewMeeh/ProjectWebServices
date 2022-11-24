@@ -1,11 +1,11 @@
-package fr.uge.rmi.comon;
+package fr.uge.rmi.common;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface IUGEDB extends Remote {
 
-    long login(String user, String password) throws RemoteException;
+    boolean login(String name, String password) throws RemoteException;
 
 
 }

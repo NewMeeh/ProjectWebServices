@@ -1,7 +1,7 @@
 package fr.uge.rmi.server;
 
-import fr.uge.rmi.comon.Bike;
-import fr.uge.rmi.comon.IBikeDB;
+import fr.uge.rmi.common.Bike;
+import fr.uge.rmi.common.IBikeDB;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;

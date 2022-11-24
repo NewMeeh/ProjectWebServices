@@ -1,4 +1,4 @@
-package fr.uge.rmi.comon;
+package fr.uge.rmi.common;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

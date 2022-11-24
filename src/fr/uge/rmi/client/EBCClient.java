@@ -1,7 +1,8 @@
 package fr.uge.rmi.client;
 
 import java.rmi.Naming;
-import fr.uge.rmi.comon.IBikeDB;
+import fr.uge.rmi.common.IBikeDB;
+import fr.uge.rmi.common.IUGEDB;
 
 public class EBCClient {
 
@@ -9,7 +10,7 @@ public class EBCClient {
         try {
             IUGEDB ugedb = (IUGEDB) Naming.lookup("rmi://localhost:1099/EiffelBikeCorpService/ConnectPage");
 
-            if(ugedb.login()) {
+            if(ugedb.login("Julien", "password")) {
                 IBikeDB bikeDB = (IBikeDB) Naming.lookup("rmi://localhost:1099/EiffelBikeCorpService/bikesPage");
             }
         } catch (Exception e) {

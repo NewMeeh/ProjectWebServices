@@ -1,4 +1,4 @@
-package fr.uge.rmi.comon;
+package fr.uge.rmi.common;
 
 import java.util.ArrayList;
 
@@ -6,14 +6,14 @@ public class Bike {
     private final long bikeId;
     private final long ownerId;
     private long userId = -1; // -1 if the bike is in the shop
-    private final float LocationPrice;
+    private final float locationPrice;
     private boolean used = false;
     private final ArrayList<Integer> grades = new ArrayList<>();
 
     public Bike(long ownerId1, float LocationPrice, long bikeId) {
 
         this.ownerId = ownerId1;
-        this.LocationPrice = LocationPrice;
+        this.locationPrice = LocationPrice;
         this.bikeId = bikeId;
     }
 
@@ -40,8 +40,8 @@ public class Bike {
         grades.add(grade);
     }
 
-    public float getPrice() {
-        return price;
+    public float getLocationPrice() {
+        return locationPrice;
     }
 
     public double getGrade() {

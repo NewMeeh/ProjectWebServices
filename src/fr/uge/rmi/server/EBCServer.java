@@ -4,20 +4,20 @@ import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
 import fr.uge.rmi.common.Bike;
-import fr.uge.rmi.common.IBike;
+import fr.uge.rmi.common.IBikeDB;
 
-public class EBCServeur {
+public class EBCServer {
     public static void main(String args[]) {
         try
         {
             LocateRegistry.createRegistry(1099);
-            IUGEDB ugedb = new UGEDB();
+            var ugedb = new UGEDB();
             IBikeDB bikeDB = new BikeDB();
 
-            bikeDB.addBike(new Bike((long) ugedb.getId("Nader"), 1.30, 1));
-            bikeDB.addBike(new Bike((long) ugedb.getId("Nader"), 2.50, 2));
-            bikeDB.addBike(new Bike((long) ugedb.getId("Nader"), 8.80, 3));
-            bikeDB.addBike(new Bike((long) ugedb.getId("Nader"), 11.80, 4));
+            bikeDB.addBike(new Bike(ugedb.getId("Nader").get(), 1.30F, 1));
+            bikeDB.addBike(new Bike(ugedb.getId("Nader").get(), 2.50F, 2));
+            bikeDB.addBike(new Bike(ugedb.getId("Nader").get(), 8.80F, 3));
+            bikeDB.addBike(new Bike(ugedb.getId("Nader").get(), 11.80F, 4));
 
             Naming.rebind("rmi://localhost:1099/EiffelBikeCorpService/ConnectPage", ugedb);
             Naming.rebind("rmi://localhost:1099/EiffelBikeCorpService/bikesPage", bikeDB);
