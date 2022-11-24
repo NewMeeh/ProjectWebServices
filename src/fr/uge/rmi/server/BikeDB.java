@@ -53,4 +53,8 @@ public class BikeDB extends UnicastRemoteObject implements IBikeDB {
             bike.setUserId(l.poll());
         }
     }
+
+    public Optional<Bike> getBikebyId(long id) {
+        return bikes.keySet().stream().filter(b -> b.getId() == id).findFirst();
+    }
 }

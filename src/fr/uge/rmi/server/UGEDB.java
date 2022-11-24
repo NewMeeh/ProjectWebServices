@@ -5,11 +5,20 @@ import fr.uge.rmi.comon.IUGEDB;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class UGEDB extends UnicastRemoteObject implements IUGEDB {
 
 
-    record UGEUser(String user, String password){}
+    record UGEUser(String user, String password){
+
+        public boolean isUser(String name) {
+            return name == user;
+        }
+        public boolean isPassword(String pwd) {
+            return pwd == password;
+        }
+    }
 
     private final HashMap<Long, UGEUser> users = new HashMap<>();
 
@@ -33,8 +42,22 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
 
 
     @Override
-    public long login(String user, String password) throws RemoteException {
-        return 0;
+    public Boolean login(String user, String password) throws RemoteException {
+        for(Entry<Long, UGEUser> user : users.entrySet()) {
+            if(user.getValue().isUSer(name) && user.getValue().isPassword(password)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Optional<Long> getId(String name) {
+        for(Entry<Long, UGEUser> user : users.entrySet()) {
+            if(user.getValue().isUSer(name)) {
+                return user.getKey();
+            }
+        }
+        return null;
     }
 
 

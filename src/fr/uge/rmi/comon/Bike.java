@@ -3,15 +3,18 @@ package fr.uge.rmi.comon;
 import java.util.ArrayList;
 
 public class Bike {
+    private final long bikeId;
     private final long ownerId;
     private long userId = -1; // -1 if the bike is in the shop
-    private final float price;
+    private final float LocationPrice;
     private boolean used = false;
     private final ArrayList<Integer> grades = new ArrayList<>();
 
-    public Bike(long ownerId1, float price) {
+    public Bike(long ownerId1, float LocationPrice, long bikeId) {
+
         this.ownerId = ownerId1;
-        this.price = price;
+        this.LocationPrice = LocationPrice;
+        this.bikeId = bikeId;
     }
 
     private void use() {
@@ -45,4 +48,5 @@ public class Bike {
         return grades.stream().mapToDouble(a->a).average().orElse(0);
     }
 
+    public long getId() { return bikeId;}
 }

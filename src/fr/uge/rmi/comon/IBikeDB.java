@@ -11,4 +11,5 @@ public interface IBikeDB extends Remote {
     void rank(Bike bike, int grade) throws RemoteException;
     void turnIn(Bike bike, long userId) throws RemoteException;
 
+
 }
