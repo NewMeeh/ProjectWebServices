@@ -22,7 +22,6 @@ public class EBCServeur {
             Naming.rebind("rmi://localhost:1099/EiffelBikeCorpService/ConnectPage", ugedb);
             Naming.rebind("rmi://localhost:1099/EiffelBikeCorpService/bikesPage", bikeDB);
 
-
         } catch(Exception e){
             System.out.println("Exception:" + e);
         }
