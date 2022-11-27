@@ -11,7 +11,7 @@ import java.util.Optional;
 public class UGEDB extends UnicastRemoteObject implements IUGEDB {
 
 
-    record UGEUser(String user, String password){
+    record UGEUser(String user, String password) {
 
         public boolean isUser(String name) {
             return name.equals(user);
@@ -52,13 +52,14 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
         return false;
     }
 
-    public Optional<Long> getId(String name) {
+    @Override
+    public long getId(String name) throws RemoteException {
         for(Map.Entry<Long, UGEUser> user : users.entrySet()) {
             if(user.getValue().isUser(name)) {
-                return Optional.ofNullable(user.getKey());
+                return user.getKey();
             }
         }
-        return null;
+        return -1L;
     }
 
 

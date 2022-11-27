@@ -56,7 +56,10 @@ public class BikeDB extends UnicastRemoteObject implements IBikeDB {
 
     @Override
     public void displayBikes() {
-        System.out.println(bikes);
+        for (Bike bike:
+             bikes.keySet()) {
+            System.out.println(bike);
+        }
     }
 
     public Optional<Bike> getBikebyId(long id) {

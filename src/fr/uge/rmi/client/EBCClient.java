@@ -11,7 +11,6 @@ public class EBCClient {
             IUGEDB ugedb = (IUGEDB) Naming.lookup("UGEDB");
             if(ugedb.login("Julien", "pwd")) {
                 IBikeDB bikeDB = (IBikeDB) Naming.lookup("BikeDB");
-                System.out.println("ok");
                 bikeDB.displayBikes();
                 //TODO utiliser les methodes de IBikeDB.java
             }

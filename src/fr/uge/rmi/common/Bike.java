@@ -12,8 +12,11 @@ public class Bike {
 
     public Bike(long ownerId1, float LocationPrice, long bikeId) {
 
+        if(ownerId1 < 0) throw new IllegalArgumentException("id must be > 0");
         this.ownerId = ownerId1;
+        if(LocationPrice < 0) throw new IllegalArgumentException("locationPrice must be > 0");
         this.locationPrice = LocationPrice;
+        if(ownerId1 < 0) throw new IllegalArgumentException("ownerId1 must be > 0");
         this.bikeId = bikeId;
     }
 
