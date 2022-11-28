@@ -1,10 +1,9 @@
-package fr.uge.rmi.server;
+package fr.uge.ugeserver;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
-import fr.uge.rmi.common.IUGEDB;
 
-public class EBCServerUGE {
+public class UGEServer {
     public static void main(String args[]) {
         try {
             LocateRegistry.createRegistry(1099);

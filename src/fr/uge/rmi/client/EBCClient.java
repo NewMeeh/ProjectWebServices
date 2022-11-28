@@ -12,6 +12,7 @@ public class EBCClient {
             if(ugedb.login("Julien", "pwd")) {
                 IBikeDB bikeDB = (IBikeDB) Naming.lookup("BikeDB");
                 bikeDB.displayBikes();
+                //TODO renvoyer des string pour pouvoir afficher les bikes dans le client.
                 //TODO utiliser les methodes de IBikeDB.java
             }
         } catch (Exception e) {

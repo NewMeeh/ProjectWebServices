@@ -1,18 +1,20 @@
-package fr.uge.rmi.server;
+package fr.uge.ugeserver;
 
 import fr.uge.rmi.common.IUGEDB;
+import org.springframework.web.bind.annotation.*;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
+
+@RestController
+@RequestMapping("/uge")
 public class UGEDB extends UnicastRemoteObject implements IUGEDB {
 
 
     record UGEUser(String user, String password) {
-
         public boolean isUser(String name) {
             return name.equals(user);
         }
@@ -24,9 +26,7 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
     private final HashMap<Long, UGEUser> users = new HashMap<>();
 
 
-
-    protected UGEDB() throws RemoteException {
-        // BLABLA remplir la hashmap
+    public UGEDB() throws RemoteException {
         fillHashMap();
     }
 
@@ -42,6 +42,17 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
     }
 
 
+    @PostMapping(value = "/login")
+    public boolean login(@RequestBody UGEUser ugeUser) throws RemoteException {
+        for(Map.Entry<Long, UGEUser> user : users.entrySet()) {
+            if(user.getValue().isUser(ugeUser.user()) && user.getValue().isPassword(ugeUser.password())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     @Override
     public boolean login(String name, String password) throws RemoteException {
         for(Map.Entry<Long, UGEUser> user : users.entrySet()) {
@@ -52,8 +63,9 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
         return false;
     }
 
+    @GetMapping(value = "/user/{name}")
     @Override
-    public long getId(String name) throws RemoteException {
+    public long getId(@PathVariable String name) throws RemoteException {
         for(Map.Entry<Long, UGEUser> user : users.entrySet()) {
             if(user.getValue().isUser(name)) {
                 return user.getKey();
@@ -61,8 +73,4 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
         }
         return -1L;
     }
-
-
-
-
 }
