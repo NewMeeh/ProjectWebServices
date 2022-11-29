@@ -1,7 +1,7 @@
 package fr.uge.rmi.server;
 
-import fr.uge.rmi.comon.Bike;
-import fr.uge.rmi.comon.IBikeDB;
+import fr.uge.rmi.common.Bike;
+import fr.uge.rmi.common.IBikeDB;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -51,6 +51,14 @@ public class BikeDB extends UnicastRemoteObject implements IBikeDB {
         if (l.size() > 0) {
             System.out.println(userId + " mec c'est à ton tour."); // TODO Send notification to the client
             bike.setUserId(l.poll());
+        }
+    }
+
+    @Override
+    public void displayBikes() {
+        for (Bike bike:
+             bikes.keySet()) {
+            System.out.println(bike);
         }
     }
 
