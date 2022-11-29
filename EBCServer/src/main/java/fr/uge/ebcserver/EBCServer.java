@@ -1,4 +1,4 @@
-package fr.uge.rmi.server;
+package fr.uge.ebcserver;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
@@ -7,7 +7,7 @@ import fr.uge.rmi.common.Bike;
 import fr.uge.rmi.common.IBikeDB;
 import fr.uge.rmi.common.IUGEDB;
 
-public class EBCServerBikes {
+public class EBCServer {
     public static void main(String args[]) {
         try
         {
