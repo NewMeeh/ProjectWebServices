@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -17,7 +18,7 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
 
     Logger logger = Logger.getLogger(UGEDB.class.getName());
 
-    record UGEUser(String user, String password) {
+    record UGEUser(Long id, String user, String password) {
         public boolean isUser(String name) {
             return name.equals(user);
         }
@@ -40,32 +41,35 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
         String[] name= {"Julien", "Nader", "Thomas", "Adrien", "Maël", "William", "Georges", "Estelle", "Althéa", "Irwin", "Gogo",
                 "Orhan", "Loris", "Xavit", "Sami", "Bryan", "Jimmy", "Fredo", "Rym", "Coco"};
 
-        for (int i = 0; i < 20; i++) {
-            users.put((long) i, new UGEUser(name[i], "pwd"));
+        for (long i = 0; i < 20; i++) {
+            users.put(i, new UGEUser(i, name[(int) i], "pwd"));
         }
         logger.info(users.toString());
     }
 
     @Override
-    public boolean isTokenValid(String token) {
-        for (String t : connectedUsers.values()) {
-            logger.info("token is " + token);
-            logger.info("t is " + t);
-            if(t.equals(token)) {
+    /*
+      Check if the given token is valid returns the id of the user if it is valid
+      return -1 if the token not valid
+     */
+    public long isTokenValid(String token) throws RemoteException {
+        logger.info("token is " + token);
+        for(var e : connectedUsers.entrySet()) {
+            if (e.getValue().equals(token)) {
                 logger.info("success : token is valid");
-                return true;
+                return e.getKey().id();
             }
         }
         logger.info("failure : token doesn't exist");
-        return false;
+        return -1;
     }
 
     // code get from https://stackoverflow.com/questions/13992972/how-to-create-a-authentication-token-using-java
     private String randomToken() {
         SecureRandom random = new SecureRandom();
-        byte bytes[] = new byte[16];
+        byte[] bytes = new byte[16];
         random.nextBytes(bytes);
-        return bytes.toString();
+        return Arrays.toString(bytes);
     }
 
     @PostMapping(value = "/login")
@@ -84,6 +88,7 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
     }
 
     @PostMapping(value = "/logout")
+
     public void logout(@RequestBody UGEUser ugeUser) throws RemoteException {
         var token = connectedUsers.remove(ugeUser);
         logger.info("logout previous token were " + token);
