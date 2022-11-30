@@ -8,6 +8,7 @@ public class Bike {
     private long userId = -1; // -1 if the bike is in the shop
     private final float locationPrice;
     private boolean used = false;
+    private final ArrayList<Long> waiters = new ArrayList<>();
     private final ArrayList<Integer> grades = new ArrayList<>();
 
     public Bike(long ownerId1, float LocationPrice, long bikeId) {
@@ -29,9 +30,14 @@ public class Bike {
         if (!used) use();
     }
 
-    public void UnsetUserId(long userId) {
+    public int UnsetUserId(long userId) {
         if (userId != this.userId) throw new IllegalArgumentException("You must have the bike to turn it in.");
         this.userId = -1;
+        return this.waiters.size();
+    }
+
+    public void setNextUserId() {
+        this.userId = waiters.remove(0);
     }
 
     public boolean isRented() {
@@ -52,4 +58,10 @@ public class Bike {
     }
 
     public long getId() { return bikeId;}
+
+    public void add(long userId) {
+        this.waiters.add(userId);
+    }
+
+
 }

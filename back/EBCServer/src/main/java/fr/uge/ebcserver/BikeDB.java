@@ -2,22 +2,25 @@ package fr.uge.ebcserver;
 
 import fr.uge.rmi.common.Bike;
 import fr.uge.rmi.common.IBikeDB;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/bikes")
 public class BikeDB extends UnicastRemoteObject implements IBikeDB {
 
+    Logger logger = Logger.getLogger(BikeDB.class.getName());
     private final HashMap<Bike, ArrayDeque<Long>> bikes = new HashMap<>();
 
     protected BikeDB() throws RemoteException {
+    }
+
+    private Optional<Bike> getBikeById(long id) {
+        return bikes.keySet().stream().filter(b -> b.getId() == id).findFirst();
     }
 
     @PostMapping(value = "/add")
@@ -25,51 +28,62 @@ public class BikeDB extends UnicastRemoteObject implements IBikeDB {
     public void addBike(@RequestBody Bike bike) throws RemoteException {
         Objects.requireNonNull(bike);
         bikes.put(bike, new ArrayDeque<>());
+        logger.info(bikes.toString());
     }
-
+    @PostMapping(value = "/rent/{bikeId}/{userId}")
     @Override
-    public int rent(Bike bike, long userId) throws RemoteException {
-        Objects.requireNonNull(bike);
-        var l = bikes.get(bike);
+    public int rent(@PathVariable String bikeId, @PathVariable String userId) throws RemoteException {
+        Objects.requireNonNull(bikeId);
+        Objects.requireNonNull(userId);
+        var bike = this.getBikeById(Long.parseLong(bikeId)).get();
 
         if (bike.isRented()) {
-            l.add(userId);
+            bike.add(Long.parseLong(userId));
+            logger.info(bike.toString());
             return 2;
         }
-
-        bike.setUserId(userId);
+        bike.setUserId(Long.parseLong(userId));
+        logger.info(bike.toString());
         return 1;
     }
 
+    @PostMapping(value = "/rank/{bikeId}/{grade}")
     @Override
-    public void rank(Bike bike, int grade) throws RemoteException {
-        Objects.requireNonNull(bike);
-        if (grade < 1 || grade > 5) throw new IllegalArgumentException("Grade must be between 1 and 5");
-
-        bike.addGrade(grade);
+    public void rank(@PathVariable String bikeId, @PathVariable String grade) throws RemoteException {
+        Objects.requireNonNull(bikeId);
+        Objects.requireNonNull(grade);
+        if (Integer.getInteger(grade) < 1 || Integer.getInteger(grade) > 5) throw new IllegalArgumentException("Grade must be between 1 and 5");
+        var bike = this.getBikeById(Long.parseLong(bikeId)).get();
+        bike.addGrade(Integer.getInteger(grade));
+        logger.info(bike.toString());
     }
-
+    @PostMapping(value = "/turnIn/{bikeId}/{userId}")
     @Override
-    public void turnIn(Bike bike, long userId) throws RemoteException {
-        Objects.requireNonNull(bike);
-        bike.UnsetUserId(userId);
-
-        var l = bikes.get(bike);
-        if (l.size() > 0) {
+    public void turnIn(@PathVariable String bikeId, @PathVariable String userId) throws RemoteException {
+        Objects.requireNonNull(bikeId);
+        Objects.requireNonNull(userId);
+        var bike = this.getBikeById(Long.parseLong(bikeId)).get();
+        var size = bike.UnsetUserId(Long.parseLong(userId));
+        if (size > 0) {
             System.out.println(userId + " mec c'est à ton tour."); // TODO Send notification to the client
-            bike.setUserId(l.poll());
+            bike.setNextUserId();
         }
+        logger.info(bike.toString());
     }
 
     @Override
-    public void displayBikes() {
-        for (Bike bike:
-             bikes.keySet()) {
-            System.out.println(bike);
-        }
+    public Set<Bike> displayBikes() throws RemoteException {
+        logger.info(bikes.toString());
+        return bikes.keySet();
     }
 
-    public Optional<Bike> getBikebyId(long id) {
-        return bikes.keySet().stream().filter(b -> b.getId() == id).findFirst();
+    @PostMapping(value = "/{bikeId}")
+    @Override
+    public Bike displayBikeById(@PathVariable String bikeId) throws RemoteException {
+        var bike = this.getBikeById(Long.parseLong(bikeId)).get();
+        logger.info(bike.toString());
+        return bike;
     }
+
+
 }

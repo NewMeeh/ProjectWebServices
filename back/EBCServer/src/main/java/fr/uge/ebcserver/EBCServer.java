@@ -15,11 +15,13 @@ public class EBCServer {
             IUGEDB ugedb = (IUGEDB) Naming.lookup("UGEDB");
 
             IBikeDB bikeDB = new BikeDB();
+/*
 
             bikeDB.addBike(new Bike(ugedb.isTokenValid("Nader"), 1.30F, 1));
             bikeDB.addBike(new Bike(ugedb.isTokenValid("Nader"), 2.50F, 2));
             bikeDB.addBike(new Bike(ugedb.isTokenValid("Nader"), 8.80F, 3));
             bikeDB.addBike(new Bike(ugedb.isTokenValid("Nader"), 11.80F, 4));
+*/
 
             Naming.rebind("BikeDB", bikeDB);
 
