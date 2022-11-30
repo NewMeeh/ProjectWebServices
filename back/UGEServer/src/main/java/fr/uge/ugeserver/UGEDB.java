@@ -69,7 +69,7 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
         SecureRandom random = new SecureRandom();
         byte[] bytes = new byte[16];
         random.nextBytes(bytes);
-        return Arrays.toString(bytes);
+        return bytes.toString();
     }
 
     @PostMapping(value = "/login")

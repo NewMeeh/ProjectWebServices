@@ -3,7 +3,6 @@ package fr.uge.ebcserver;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
-import fr.uge.rmi.common.Bike;
 import fr.uge.rmi.common.IBikeDB;
 import fr.uge.rmi.common.IUGEDB;
 

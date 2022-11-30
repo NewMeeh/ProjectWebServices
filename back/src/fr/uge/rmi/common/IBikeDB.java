@@ -2,7 +2,7 @@ package fr.uge.rmi.common;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.Set;
+import java.util.Collection;
 
 
 public interface IBikeDB extends Remote {
@@ -11,7 +11,7 @@ public interface IBikeDB extends Remote {
     int rent(String bikeId, String userId) throws RemoteException;
     void rank(String bikeId, String grade) throws RemoteException;
     void turnIn(String bikeId, String userId) throws RemoteException;
-    Set<Bike> displayBikes() throws RemoteException;
+    Collection<Bike> displayBikes() throws RemoteException;
     Bike displayBikeById(String bikeId) throws RemoteException;
 
 }

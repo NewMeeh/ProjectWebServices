@@ -14,28 +14,47 @@ import java.util.logging.Logger;
 public class BikeDB extends UnicastRemoteObject implements IBikeDB {
 
     Logger logger = Logger.getLogger(BikeDB.class.getName());
-    private final HashMap<Bike, ArrayDeque<Long>> bikes = new HashMap<>();
+    private final ArrayList<Bike> bikes = new ArrayList<>();
 
     protected BikeDB() throws RemoteException {
     }
 
+    /*
     private Optional<Bike> getBikeById(long id) {
-        return bikes.keySet().stream().filter(b -> b.getId() == id).findFirst();
+        return bikes.stream().filter(b -> b.getId() == id).findFirst();
     }
-
+*/
     @PostMapping(value = "/add")
     @Override
     public void addBike(@RequestBody Bike bike) throws RemoteException {
         Objects.requireNonNull(bike);
-        bikes.put(bike, new ArrayDeque<>());
+        bikes.add(bike);
         logger.info(bikes.toString());
     }
+
+    @DeleteMapping(value = "/remove")
+    public void remove(@RequestBody Bike bike) throws RemoteException {
+        Objects.requireNonNull(bike);
+        bikes.remove(bike);
+    }
+
+    @GetMapping("/bikes")
+    public Collection<Bike> getBikes() throws RemoteException {
+        return bikes;
+    }
+
+    @GetMapping("bikes/{id}")
+    public Bike getBikeById(@PathVariable long id) throws RemoteException {
+        return bikes.stream().filter(bike -> bike.getId() == id).findFirst().orElse(null);
+    }
+
+
     @PostMapping(value = "/rent/{bikeId}/{userId}")
     @Override
     public int rent(@PathVariable String bikeId, @PathVariable String userId) throws RemoteException {
         Objects.requireNonNull(bikeId);
         Objects.requireNonNull(userId);
-        var bike = this.getBikeById(Long.parseLong(bikeId)).get();
+        Bike bike = this.getBikeById(Long.parseLong(bikeId));
 
         if (bike.isRented()) {
             bike.add(Long.parseLong(userId));
@@ -53,7 +72,7 @@ public class BikeDB extends UnicastRemoteObject implements IBikeDB {
         Objects.requireNonNull(bikeId);
         Objects.requireNonNull(grade);
         if (Integer.getInteger(grade) < 1 || Integer.getInteger(grade) > 5) throw new IllegalArgumentException("Grade must be between 1 and 5");
-        var bike = this.getBikeById(Long.parseLong(bikeId)).get();
+        var bike = this.getBikeById(Long.parseLong(bikeId));
         bike.addGrade(Integer.getInteger(grade));
         logger.info(bike.toString());
     }
@@ -62,7 +81,7 @@ public class BikeDB extends UnicastRemoteObject implements IBikeDB {
     public void turnIn(@PathVariable String bikeId, @PathVariable String userId) throws RemoteException {
         Objects.requireNonNull(bikeId);
         Objects.requireNonNull(userId);
-        var bike = this.getBikeById(Long.parseLong(bikeId)).get();
+        var bike = this.getBikeById(Long.parseLong(bikeId));
         var size = bike.UnsetUserId(Long.parseLong(userId));
         if (size > 0) {
             System.out.println(userId + " mec c'est à ton tour."); // TODO Send notification to the client
@@ -72,15 +91,15 @@ public class BikeDB extends UnicastRemoteObject implements IBikeDB {
     }
 
     @Override
-    public Set<Bike> displayBikes() throws RemoteException {
+    public Collection<Bike> displayBikes() throws RemoteException {
         logger.info(bikes.toString());
-        return bikes.keySet();
+        return bikes;
     }
 
     @PostMapping(value = "/{bikeId}")
     @Override
     public Bike displayBikeById(@PathVariable String bikeId) throws RemoteException {
-        var bike = this.getBikeById(Long.parseLong(bikeId)).get();
+        var bike = this.getBikeById(Long.parseLong(bikeId));
         logger.info(bike.toString());
         return bike;
     }
