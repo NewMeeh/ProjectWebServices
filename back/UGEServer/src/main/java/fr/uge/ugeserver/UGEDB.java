@@ -28,7 +28,7 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
     }
 
     private final HashMap<Long, UGEUser> users = new HashMap<>();
-    private final HashMap<UGEUser, String> connectedUsers = new HashMap<>();
+    private final HashMap<String, UGEUser> connectedUsers = new HashMap<>();
 
 
     public UGEDB() throws RemoteException {
@@ -55,9 +55,9 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
     public long isTokenValid(String token) throws RemoteException {
         logger.info("token is " + token);
         for(var e : connectedUsers.entrySet()) {
-            if (e.getValue().equals(token)) {
+            if (e.getKey().equals(token)) {
                 logger.info("success : token is valid");
-                return e.getKey().id();
+                return e.getValue().id();
             }
         }
         logger.info("failure : token doesn't exist");
@@ -69,7 +69,7 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
         SecureRandom random = new SecureRandom();
         byte[] bytes = new byte[16];
         random.nextBytes(bytes);
-        return Arrays.toString(bytes);
+        return bytes.toString();
     }
 
     @PostMapping(value = "/login")
@@ -77,7 +77,7 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
         for(Map.Entry<Long, UGEUser> user : users.entrySet()) {
             if(user.getValue().isUser(ugeUser.user()) && user.getValue().isPassword(ugeUser.password())) {
                 var token = randomToken();
-                connectedUsers.put(ugeUser, token);
+                connectedUsers.put(token, ugeUser);
                 logger.info("login success token is " + token);
                 return token;
             }
@@ -89,8 +89,8 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
 
     @PostMapping(value = "/logout")
 
-    public void logout(@RequestBody UGEUser ugeUser) throws RemoteException {
-        var token = connectedUsers.remove(ugeUser);
+    public void logout(@RequestHeader("token") String token) throws RemoteException {
+        connectedUsers.remove(token);
         logger.info("logout previous token were " + token);
     }
 
