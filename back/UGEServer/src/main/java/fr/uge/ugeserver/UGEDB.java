@@ -5,10 +5,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 
@@ -64,12 +63,9 @@ public class UGEDB extends UnicastRemoteObject implements IUGEDB {
         return -1;
     }
 
-    // code get from https://stackoverflow.com/questions/13992972/how-to-create-a-authentication-token-using-java
     private String randomToken() {
-        SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[16];
-        random.nextBytes(bytes);
-        return bytes.toString();
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
     }
 
     @PostMapping(value = "/login")
