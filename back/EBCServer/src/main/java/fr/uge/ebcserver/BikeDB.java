@@ -104,5 +104,9 @@ public class BikeDB extends UnicastRemoteObject implements IBikeDB {
         return bike;
     }
 
+    //TODO Method
+    /*toSell
+    remove*/
+
 
 }

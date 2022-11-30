@@ -14,4 +14,8 @@ public interface IBikeDB extends Remote {
     Collection<Bike> displayBikes() throws RemoteException;
     Bike displayBikeById(String bikeId) throws RemoteException;
 
+    //TODO Method
+    /*toSell
+    remove*/
+
 }
