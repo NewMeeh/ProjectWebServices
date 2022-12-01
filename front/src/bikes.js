@@ -1,4 +1,4 @@
-import { Card } from 'antd';
+import { Card, Col } from 'antd';
 import React from 'react';
 const { Meta } = Card;
 
@@ -14,8 +14,8 @@ export class Bike extends React.Component {
 
     render() {
         const title = this.state.owner + "'s bike";
-        console.log(title);
         return (
+            <Col span={6}>
             <Card
                 hoverable
                 style={{width: 240, margin: "auto"}}
@@ -24,6 +24,7 @@ export class Bike extends React.Component {
                 <Meta title={title} description={this.state.rating + " stars"}/>
                 <p className="price">{this.state.price + "$"}</p>
             </Card>
+            </Col>
         );
     }
 }
