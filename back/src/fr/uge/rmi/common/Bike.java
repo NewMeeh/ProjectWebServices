@@ -11,7 +11,7 @@ public class Bike {
     private final ArrayList<Long> waiters = new ArrayList<>();
     private final ArrayList<Integer> grades = new ArrayList<>();
 
-    public Bike(long ownerId1, float LocationPrice, long bikeId) {
+    public Bike(long ownerId1, long bikeId, String name, float LocationPrice, String desc) {
 
         if(ownerId1 < 0) throw new IllegalArgumentException("id must be > 0");
         this.ownerId = ownerId1;
@@ -64,4 +64,31 @@ public class Bike {
     }
 
 
+    public long getBikeId() {
+        return bikeId;
+    }
+
+    public long getOwnerId() {
+        return ownerId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
+
+    public ArrayList<Long> getWaiters() {
+        return waiters;
+    }
+
+    public ArrayList<Integer> getGrades() {
+        return grades;
+    }
 }

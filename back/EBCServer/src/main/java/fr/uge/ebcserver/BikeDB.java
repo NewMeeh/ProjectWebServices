@@ -1,112 +1,69 @@
 package fr.uge.ebcserver;
 
 import fr.uge.rmi.common.Bike;
-import fr.uge.rmi.common.IBikeDB;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.Collection;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/bikes")
-public class BikeDB extends UnicastRemoteObject implements IBikeDB {
+public class BikeDB {
 
-    Logger logger = Logger.getLogger(BikeDB.class.getName());
-    private final ArrayList<Bike> bikes = new ArrayList<>();
+    @Autowired
+    private BikeDBService bikeDBService;
 
-    protected BikeDB() throws RemoteException {
+
+    record BikeForm(String name, float locationPrice, String description){}
+    @PutMapping
+    public void addBike(@RequestHeader("token") String token, @RequestBody BikeForm bikeForm) {
+        Objects.requireNonNull(token);
+        Objects.requireNonNull(bikeForm);
+        bikeDBService.addBike(token, bikeForm);
     }
 
-    /*
-    private Optional<Bike> getBikeById(long id) {
-        return bikes.stream().filter(b -> b.getId() == id).findFirst();
-    }
-*/
-    @PostMapping(value = "/add")
-    @Override
-    public void addBike(@RequestBody Bike bike) throws RemoteException {
-        Objects.requireNonNull(bike);
-        bikes.add(bike);
-        logger.info(bikes.toString());
+    @DeleteMapping(value = "/{id}")
+    public void remove(@RequestHeader("token") String token, @PathVariable long id) {
+        Objects.requireNonNull(token);
+        bikeDBService.remove(token, id);
     }
 
-    @DeleteMapping(value = "/remove")
-    public void remove(@RequestBody Bike bike) throws RemoteException {
-        Objects.requireNonNull(bike);
-        bikes.remove(bike);
+    @GetMapping("")
+    public Collection<Bike> getBikes(@RequestHeader("token") String token) {
+        Objects.requireNonNull(token);
+        return bikeDBService.getBikes(token);
     }
 
-    @GetMapping("/bikes")
-    public Collection<Bike> getBikes() throws RemoteException {
-        return bikes;
-    }
-
-    @GetMapping("bikes/{id}")
-    public Bike getBikeById(@PathVariable long id) throws RemoteException {
-        return bikes.stream().filter(bike -> bike.getId() == id).findFirst().orElse(null);
+    @GetMapping("/{id}")
+    public Bike getBikeById(@RequestHeader("token") String token, @PathVariable long id) {
+        Objects.requireNonNull(token);
+        return bikeDBService.getBikeById(token, id);
     }
 
 
-    @PostMapping(value = "/rent/{bikeId}/{userId}")
-    @Override
-    public int rent(@PathVariable String bikeId, @PathVariable String userId) throws RemoteException {
-        Objects.requireNonNull(bikeId);
-        Objects.requireNonNull(userId);
-        Bike bike = this.getBikeById(Long.parseLong(bikeId));
-
-        if (bike.isRented()) {
-            bike.add(Long.parseLong(userId));
-            logger.info(bike.toString());
-            return 2;
-        }
-        bike.setUserId(Long.parseLong(userId));
-        logger.info(bike.toString());
-        return 1;
+    @PostMapping(value = "/rent")
+    public int rent(@RequestHeader("token") String token, @RequestBody long bikeId) {
+        Objects.requireNonNull(token);
+        return bikeDBService.rent(token, bikeId);
     }
 
-    @PostMapping(value = "/rank/{bikeId}/{grade}")
-    @Override
-    public void rank(@PathVariable String bikeId, @PathVariable String grade) throws RemoteException {
-        Objects.requireNonNull(bikeId);
-        Objects.requireNonNull(grade);
-        if (Integer.getInteger(grade) < 1 || Integer.getInteger(grade) > 5) throw new IllegalArgumentException("Grade must be between 1 and 5");
-        var bike = this.getBikeById(Long.parseLong(bikeId));
-        bike.addGrade(Integer.getInteger(grade));
-        logger.info(bike.toString());
-    }
-    @PostMapping(value = "/turnIn/{bikeId}/{userId}")
-    @Override
-    public void turnIn(@PathVariable String bikeId, @PathVariable String userId) throws RemoteException {
-        Objects.requireNonNull(bikeId);
-        Objects.requireNonNull(userId);
-        var bike = this.getBikeById(Long.parseLong(bikeId));
-        var size = bike.UnsetUserId(Long.parseLong(userId));
-        if (size > 0) {
-            System.out.println(userId + " mec c'est à ton tour."); // TODO Send notification to the client
-            bike.setNextUserId();
-        }
-        logger.info(bike.toString());
-    }
 
-    @Override
-    public Collection<Bike> displayBikes() throws RemoteException {
-        logger.info(bikes.toString());
-        return bikes;
+    record RankForm(long bikeId, String comment, int grade){}
+    @PostMapping(value = "/rank")
+    public void rank(@RequestHeader("token") String token, @RequestBody RankForm rankForm) {
+        Objects.requireNonNull(token);
+        bikeDBService.rank(token, rankForm);
     }
-
-    @PostMapping(value = "/{bikeId}")
-    @Override
-    public Bike displayBikeById(@PathVariable String bikeId) throws RemoteException {
-        var bike = this.getBikeById(Long.parseLong(bikeId));
-        logger.info(bike.toString());
-        return bike;
+    @PostMapping(value = "/turnIn")
+    public void turnIn(@RequestHeader("token") String token, @RequestBody long bikeId) {
+        Objects.requireNonNull(token);
+        bikeDBService.turnIn(token, bikeId);
     }
-
-    //TODO Method
-    /*toSell
-    remove*/
-
+    @PostMapping(value = "/toSell")
+    public void toSell(@RequestHeader("token") String token, @RequestBody long id) {
+        Objects.requireNonNull(token);
+        bikeDBService.toSell(token, id);
+    }
 
 }
