@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class Bike {
     private final long bikeId;
     private final long ownerId;
+    private String name = null;
+    private String description = null;
     private long userId = -1; // -1 if the bike is in the shop
     private final float locationPrice;
     private boolean used = false;
@@ -19,6 +21,8 @@ public class Bike {
         this.locationPrice = LocationPrice;
         if(ownerId1 < 0) throw new IllegalArgumentException("ownerId1 must be > 0");
         this.bikeId = bikeId;
+        this.name = name;
+        this.description = desc;
     }
 
     private void use() {
