@@ -101,12 +101,6 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
         }
     }
 
-
-    public void toSell(String token, long id) {
-        Objects.requireNonNull(token);
-        //TODO
-    }
-
     @Override
     public Collection<Bike> displayBikes() throws RemoteException {
         return null;

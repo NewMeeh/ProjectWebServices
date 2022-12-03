@@ -41,13 +41,11 @@ public class BikeDB {
         return bikeDBService.getBikeById(token, id);
     }
 
-
     @PostMapping(value = "/rent")
     public int rent(@RequestHeader("token") String token, @RequestBody long bikeId) {
         Objects.requireNonNull(token);
         return bikeDBService.rent(token, bikeId);
     }
-
 
     record RankForm(long bikeId, String comment, int grade){}
     @PostMapping(value = "/rank")
@@ -55,15 +53,11 @@ public class BikeDB {
         Objects.requireNonNull(token);
         bikeDBService.rank(token, rankForm);
     }
+
     @PostMapping(value = "/turnIn")
     public void turnIn(@RequestHeader("token") String token, @RequestBody long bikeId) {
         Objects.requireNonNull(token);
         bikeDBService.turnIn(token, bikeId);
-    }
-    @PostMapping(value = "/toSell")
-    public void toSell(@RequestHeader("token") String token, @RequestBody long id) {
-        Objects.requireNonNull(token);
-        bikeDBService.toSell(token, id);
     }
 
 }

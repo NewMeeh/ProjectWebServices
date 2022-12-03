@@ -95,4 +95,30 @@ public class Bike {
     public ArrayList<Integer> getGrades() {
         return grades;
     }
+    public float getAvgGrade() {
+        float total = 0;
+        if(grades.size() > 0) {
+            for (int grade:  grades) {
+                total += grade;
+            }
+            return total / grades.size();
+        }
+        return total;
+    }
+    @Override
+    public String toString() {
+       return new StringBuilder("\n{")
+                .append("bike_id: " + bikeId + "\n")
+                .append("owner_id: " + ownerId + "\n")
+                .append("name: " + name + "\n")
+                .append("desc: "+ description + "\n")
+                .append("user_id: " + userId + "\n")
+                .append("location_price: " + locationPrice + "\n")
+                .append("used: " + used + "\n")
+                .append("waiters: " + waiters + "\n")
+                .append("grades: " + grades + "\n")
+                .append("avg_grade: " + this.getAvgGrade() + "\n")
+                .append("}")
+                .toString();
+    }
 }

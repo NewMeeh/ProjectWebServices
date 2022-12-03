@@ -5,6 +5,8 @@
       <list>
         <option value="$PROJECT_DIR$/EBCServer/pom.xml" />
         <option value="$PROJECT_DIR$/UGEServer/pom.xml" />
+        <option value="$PROJECT_DIR$/GustaveBikeService/pom.xml" />
+        <option value="$PROJECT_DIR$/GustaveBike/pom.xml" />
       </list>
     </option>
   </component>
