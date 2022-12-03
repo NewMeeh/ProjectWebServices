@@ -1,29 +1,22 @@
 package fr.uge.ebcserver;
 
 import java.rmi.Naming;
-import java.rmi.registry.LocateRegistry;
-
-import fr.uge.rmi.common.IBikeDB;
 import fr.uge.rmi.common.IUGEDB;
 
 public class EBCServer {
     public static void main(String[] args) {
         try
         {
-            LocateRegistry.createRegistry(1100);
-            IUGEDB ugedb = (IUGEDB) Naming.lookup("UGEDB");
+            IUGEDB ugeService = (IUGEDB) Naming.lookup("rmi://localhost:1099/ugeService");
 
-            IBikeDB bikeDB = new BikeDB();
+            long a = ugeService.isTokenValid("024240a6-668b-46e5-af3a-9723fc6ef159");
+            System.out.println(a);
+
 /*
-
-            bikeDB.addBike(new Bike(ugedb.isTokenValid("Nader"), 1.30F, 1));
-            bikeDB.addBike(new Bike(ugedb.isTokenValid("Nader"), 2.50F, 2));
-            bikeDB.addBike(new Bike(ugedb.isTokenValid("Nader"), 8.80F, 3));
-            bikeDB.addBike(new Bike(ugedb.isTokenValid("Nader"), 11.80F, 4));
-*/
-
+            LocateRegistry.createRegistry(1100);
+            IBikeDB bikeDB = new BikeDB();
             Naming.rebind("BikeDB", bikeDB);
-
+*/
         } catch(Exception e){
             System.out.println("Exception:" + e);
         }

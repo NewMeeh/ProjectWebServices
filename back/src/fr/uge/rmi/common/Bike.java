@@ -5,13 +5,15 @@ import java.util.ArrayList;
 public class Bike {
     private final long bikeId;
     private final long ownerId;
+    private String name = null;
+    private String description = null;
     private long userId = -1; // -1 if the bike is in the shop
     private final float locationPrice;
     private boolean used = false;
     private final ArrayList<Long> waiters = new ArrayList<>();
     private final ArrayList<Integer> grades = new ArrayList<>();
 
-    public Bike(long ownerId1, float LocationPrice, long bikeId) {
+    public Bike(long ownerId1, long bikeId, String name, float LocationPrice, String desc) {
 
         if(ownerId1 < 0) throw new IllegalArgumentException("id must be > 0");
         this.ownerId = ownerId1;
@@ -19,6 +21,8 @@ public class Bike {
         this.locationPrice = LocationPrice;
         if(ownerId1 < 0) throw new IllegalArgumentException("ownerId1 must be > 0");
         this.bikeId = bikeId;
+        this.name = name;
+        this.description = desc;
     }
 
     private void use() {
@@ -64,4 +68,31 @@ public class Bike {
     }
 
 
+    public long getBikeId() {
+        return bikeId;
+    }
+
+    public long getOwnerId() {
+        return ownerId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
+
+    public ArrayList<Long> getWaiters() {
+        return waiters;
+    }
+
+    public ArrayList<Integer> getGrades() {
+        return grades;
+    }
 }
