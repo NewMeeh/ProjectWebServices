@@ -5,7 +5,8 @@ import java.util.ArrayList;
 public class Bike {
     private final long bikeId;
     private final long ownerId;
-    private String name = null;
+    private String ownerName = null;
+    private String bikeName = null;
     private String description = null;
     private long userId = -1; // -1 if the bike is in the shop
     private final float locationPrice;
@@ -13,15 +14,16 @@ public class Bike {
     private final ArrayList<Long> waiters = new ArrayList<>();
     private final ArrayList<Integer> grades = new ArrayList<>();
 
-    public Bike(long ownerId1, long bikeId, String name, float LocationPrice, String desc) {
+    public Bike(long ownerId1, String ownerName, long bikeId, String name, float LocationPrice, String desc) {
 
         if(ownerId1 < 0) throw new IllegalArgumentException("id must be > 0");
         this.ownerId = ownerId1;
+        this.ownerName = ownerName;
         if(LocationPrice < 0) throw new IllegalArgumentException("locationPrice must be > 0");
         this.locationPrice = LocationPrice;
         if(ownerId1 < 0) throw new IllegalArgumentException("ownerId1 must be > 0");
         this.bikeId = bikeId;
-        this.name = name;
+        this.bikeName = name;
         this.description = desc;
     }
 
@@ -110,7 +112,8 @@ public class Bike {
        return new StringBuilder("\n{")
                 .append("bike_id: " + bikeId + "\n")
                 .append("owner_id: " + ownerId + "\n")
-                .append("name: " + name + "\n")
+                .append("owner_id: " + ownerName + "\n")
+                .append("name: " + bikeName + "\n")
                 .append("desc: "+ description + "\n")
                 .append("user_id: " + userId + "\n")
                 .append("location_price: " + locationPrice + "\n")

@@ -39,8 +39,12 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
 
     public void addBike(String token, BikeDB.BikeForm bike) {
         Objects.requireNonNull(bike);
-        long userId = checkValidAndGetId(token);
-        bikes.add(new Bike(userId, currentBikeId++, bike.name(), bike.locationPrice(), bike.description()));
+        try {
+            long userId = checkValidAndGetId(token);
+            bikes.add(new Bike(userId, ugeService.getNameById(userId), currentBikeId++, bike.name(), bike.locationPrice(), bike.description()));
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
         logger.info(bikes.toString());
     }
 
@@ -53,6 +57,15 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
         checkValidAndGetId(token);
         return bikes;
     }
+
+/*    public Collection<Bike> getFrontInfoBikes(String token) {
+        checkValidAndGetId(token);
+        var l = new List<Bike>();
+        for (Bike bike:
+             bikes) {
+
+        }
+    }*/
 
     private Bike getBikeById(long bikeId) {
         return bikes.stream().filter(bike -> bike.getId() == bikeId).findFirst().orElse(null);

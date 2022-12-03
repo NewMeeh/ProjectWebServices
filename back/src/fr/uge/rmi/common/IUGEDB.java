@@ -5,4 +5,5 @@ import java.rmi.RemoteException;
 
 public interface IUGEDB extends Remote {
     long isTokenValid(String token) throws RemoteException;
+    String getNameById(long id) throws RemoteException;
 }
