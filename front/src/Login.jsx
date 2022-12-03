@@ -10,7 +10,16 @@ export const Login = () => {
     const handleRegisterClick = () => navigate("/register", { replace: true });
 
     const onFinish = (values: any) => {
-        console.log('Success:', values);
+        //DoTheLoginThing + add token to localStorage
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: values.username, password: values.password})
+        };
+        fetch('https://localhost:1080/login', requestOptions)
+            .then(response => response.json())
+            .then(data => this.setState({ postId: data.id }));
+        console.log('Success:ll');
     };
 
     const onFinishFailed = (errorInfo: any) => {
