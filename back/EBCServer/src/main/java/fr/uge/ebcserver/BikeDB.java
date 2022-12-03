@@ -35,12 +35,6 @@ public class BikeDB {
         return bikeDBService.getBikes(token);
     }
 
-    @GetMapping("/front")
-    public Collection<Bike> getFrontInfoBikes(@RequestHeader("token") String token) {
-        Objects.requireNonNull(token);
-        return bikeDBService.getFrontInfoBikes(token);
-    }
-
     @GetMapping("/{id}")
     public Bike getBikeById(@RequestHeader("token") String token, @PathVariable long id) {
         Objects.requireNonNull(token);
