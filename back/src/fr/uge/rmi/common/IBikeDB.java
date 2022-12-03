@@ -8,8 +8,8 @@ import java.util.Collection;
 public interface IBikeDB extends Remote {
 
     Collection<Bike> displayBikes() throws RemoteException;
-    Bike displayBikeById(String bikeId) throws RemoteException;
-    void remove(String bikeId) throws RemoteException;
+    Bike displayBikeById(long bikeId) throws RemoteException;
+    void remove(long bikeId) throws RemoteException;
 
     //TODO Method
     /*toSell*/
