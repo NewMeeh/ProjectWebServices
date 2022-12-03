@@ -14,7 +14,7 @@ import java.rmi.registry.LocateRegistry;
 public class EbcServerApplication {
 
     @Bean
-    BikeDBService bikeDBServer() throws RemoteException, MalformedURLException, NotBoundException {
+    public BikeDBService bikeDBServer() throws RemoteException, MalformedURLException, NotBoundException {
         LocateRegistry.createRegistry(1089);
         BikeDBService bikeDBServer = new BikeDBService();
         Naming.rebind("rmi://localhost:1089/bikeService", bikeDBServer);
