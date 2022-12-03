@@ -58,6 +58,11 @@ public class UGEService extends UnicastRemoteObject implements IUGEDB {
         return -1;
     }
 
+    @Override
+    public String getNameById(long id) throws RemoteException {
+        return users.get(id).firstName();
+    }
+
     private String randomToken() {
         UUID uuid = UUID.randomUUID();
         return uuid.toString();
