@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {Main} from './Main'
 import {Login, Register} from './Login'
+import {Payment} from './Payment'
 
 export function getToken(){
     const token = localStorage.getItem('token');
@@ -14,7 +15,8 @@ export function getToken(){
 const router = createBrowserRouter([
     {path: "/", element: <Main/>,},
     {path: "/login", element: <Login/>},
-    {path: "/register", element: <Register/>}
+    {path: "/register", element: <Register/>},
+    {path: "/pay", element: <Payment/>}
 ]);
 
 const root = createRoot(document.getElementById("root"));
