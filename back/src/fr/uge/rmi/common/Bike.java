@@ -82,6 +82,18 @@ public class Bike {
         return userId;
     }
 
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public String getBikeName() {
+        return bikeName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public boolean isUsed() {
         return used;
     }
@@ -112,7 +124,7 @@ public class Bike {
        return new StringBuilder("\n{")
                 .append("bike_id: " + bikeId + "\n")
                 .append("owner_id: " + ownerId + "\n")
-                .append("owner_id: " + ownerName + "\n")
+                .append("owner_name: " + ownerName + "\n")
                 .append("name: " + bikeName + "\n")
                 .append("desc: "+ description + "\n")
                 .append("user_id: " + userId + "\n")
