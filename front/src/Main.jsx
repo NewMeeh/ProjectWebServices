@@ -12,21 +12,10 @@ const { Header, Footer, Content } = Layout;
 export const Main = () => {
 
     const navigate = useNavigate();
-    var dt;
     useEffect(() => {
         if (!getToken()) {
             navigate("/login");
         }
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('token') },
-            body: ""
-        };
-        fetch('http://localhost:1100/bikes', requestOptions)
-            .then(response => response.text())
-            .then(data => {
-                dt = data;
-            });
     });
 
     return (
@@ -43,7 +32,7 @@ export const Main = () => {
                     <Content>
                         <Divider orientation="left">Bikes</Divider>
                         <Row gutter={[16, 16]} justify="space-between" align="middle">
-                            <BikeList {...props}/>
+                            <BikeList />
                         </Row>
                     </Content>
                 </Layout>
