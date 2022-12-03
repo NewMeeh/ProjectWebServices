@@ -12,8 +12,8 @@ public interface IBikeDB extends Remote {
    // void rank(String bikeId, String grade) throws RemoteException;
    // void turnIn(String bikeId, String userId) throws RemoteException;
     Collection<Bike> displayBikes() throws RemoteException;
-    Bike displayBikeById(String bikeId) throws RemoteException;
-    void remove(String bikeId) throws RemoteException;
+    Bike displayBikeById(long bikeId) throws RemoteException;
+    void remove(long bikeId) throws RemoteException;
 
     //TODO Method
     /*toSell

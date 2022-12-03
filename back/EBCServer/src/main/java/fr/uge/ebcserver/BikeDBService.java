@@ -109,17 +109,17 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
 
     @Override
     public Collection<Bike> displayBikes() throws RemoteException {
-        return null;
+        return bikes.stream().filter(Bike::isUsed).toList();
     }
 
     @Override
-    public Bike displayBikeById(String bikeId) throws RemoteException {
-        return null;
+    public Bike displayBikeById(long bikeId) throws RemoteException {
+        return bikes.stream().filter(b -> b.getBikeId()==bikeId).findFirst().orElse(null);
     }
 
     @Override
-    public void remove(String bikeId) throws RemoteException {
-
+    public void remove(long bikeId) throws RemoteException {
+        bikes.remove(bikeId);
     }
 }
 

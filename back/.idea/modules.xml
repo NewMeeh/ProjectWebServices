@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Bank/Bank.iml" filepath="$PROJECT_DIR$/Bank/Bank.iml" />
       <module fileurl="file://$PROJECT_DIR$/EBCServer/EBCServer.iml" filepath="$PROJECT_DIR$/EBCServer/EBCServer.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/EiffelBikeCorp.iml" filepath="$PROJECT_DIR$/.idea/EiffelBikeCorp.iml" />
       <module fileurl="file://$PROJECT_DIR$/UGEServer/UGEServer.iml" filepath="$PROJECT_DIR$/UGEServer/UGEServer.iml" />

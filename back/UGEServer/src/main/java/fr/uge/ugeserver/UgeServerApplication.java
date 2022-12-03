@@ -17,9 +17,6 @@ public class UgeServerApplication {
         LocateRegistry.createRegistry(1099);
         UGEService ugeService = new UGEService();
         Naming.rebind("rmi://localhost:1099/ugeService", ugeService);
-
-        System.out.println("EEEHHHHHHH JE SUIS PASS2 PAR ICI");
-
         return ugeService;
     }
 
