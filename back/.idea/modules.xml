@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/EBCServer/EBCServer.iml" filepath="$PROJECT_DIR$/EBCServer/EBCServer.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/EiffelBikeCorp.iml" filepath="$PROJECT_DIR$/.idea/EiffelBikeCorp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GustaveBike/GustaveBikeService.iml" filepath="$PROJECT_DIR$/GustaveBike/GustaveBikeService.iml" />
       <module fileurl="file://$PROJECT_DIR$/UGEServer/UGEServer.iml" filepath="$PROJECT_DIR$/UGEServer/UGEServer.iml" />
     </modules>
   </component>
