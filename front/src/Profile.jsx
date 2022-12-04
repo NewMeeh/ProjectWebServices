@@ -18,16 +18,6 @@ export const Profile = () => {
         if (!getToken()) {
             navigate("/login");
         }
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin":"*" },
-            body: JSON.stringify({ username: ".", password: "."})
-        };
-        fetch('http://localhost:1080/userInfo', requestOptions)
-            .then(response => response.text())
-            .then(data => {
-
-            });
     });
 
     const onClick = (e) => {
@@ -41,19 +31,61 @@ export const Profile = () => {
                 <Content>
                     <Divider orientation="left">Info</Divider>
                     <div style={{'padding':'10px 20px 10px 20px'}}>
-                        <p>Salut c'est Ninho</p>
+                        <UsrList />
                     </div>
                     <Divider orientation="left">My Bikes</Divider>
                     <Row gutter={[16, 16]} justify="space-between" align="middle">
-                        <BikeList />
+                        <BikeList request={"/me/share"} type={2}/>
                     </Row>
                     <Divider orientation="left">Rented Bikes</Divider>
                     <Row gutter={[16, 16]} justify="space-between" align="middle">
-                        <BikeList />
+                        <BikeList request={"/me/rent"} type={3}/>
                     </Row>
                 </Content>
             </Layout>
             <Footer><Divider orientation="right">UGEBikes3000 all rights reserved</Divider></Footer>
         </Layout>
     );
+}
+
+export class UsrList extends React.Component {
+
+    constructor() {
+        super();
+        this.state = {
+            usr: null,
+        }
+    }
+
+    componentDidMount() {
+        const that = this;
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('token') },
+        };
+        fetch('http://localhost:1100/bikes/me', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                that.setState({usr: data});
+            });
+    }
+
+    render() {
+        const rq = this.state.usr;
+        let itemList = [];
+        if (rq == null) {
+            return (
+                <h2></h2>
+            );
+        }
+        else {
+            return (
+                <div>
+                    <h2>{rq.username}</h2>
+                    <h3>{rq.lname} {rq.fname}</h3>
+                    <p>{rq.mail}</p>
+                </div>
+            );
+        }
+    }
 }

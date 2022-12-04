@@ -30,7 +30,7 @@ export const Main = () => {
                     <Content>
                         <Divider orientation="left">Bikes</Divider>
                         <Row gutter={[16, 16]} justify="space-between" align="middle">
-                            <BikeList />
+                            <BikeList request={""} type={1}/>
                         </Row>
                     </Content>
                 </Layout>
