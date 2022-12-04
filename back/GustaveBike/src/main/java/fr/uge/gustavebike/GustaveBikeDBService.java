@@ -150,6 +150,13 @@ public class GustaveBikeDBService {
         }
     }
 
+    @PostMapping("/myCart/total")
+    public float total(@RequestHeader("gtoken") String gtoken) {
+        var userId = checkValidAndGetId(gtoken);
+        var userCart = allCarts.get(userId);
+        return (float) userCart.stream().mapToDouble(Bike::getResalePrice).sum();
+    }
+
     private boolean isInAllCarts(Bike bike) {
         var nbBikePresent = allCarts.values().stream().filter(cart -> cart.contains(bike)).count();
         if(nbBikePresent == 0) {
