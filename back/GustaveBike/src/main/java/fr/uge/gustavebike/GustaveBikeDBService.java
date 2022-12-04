@@ -127,14 +127,14 @@ public class GustaveBikeDBService {
     }
 
 
-    record CardForm(String cardNumber, String expirationDate, String cvv, float amount){}
+    record CardForm(String cardNumber, String expirationDate, String cvv){}
     /* Voir le type de requete avec toto */
     @PostMapping("/myCart/buy")
     public void buy(@RequestHeader("gtoken") String gtoken, @RequestBody CardForm cardForm) throws RemoteException {
         var userId = checkValidAndGetId(gtoken);
         var userCart = allCarts.get(userId);
         var totalPrice = (float) userCart.stream().mapToDouble(b -> b.getResalePrice()).sum();
-        var hasMoney = bankService.pay(cardForm.cardNumber, cardForm.expirationDate, cardForm.cvv, cardForm.amount);
+        var hasMoney = bankService.pay(cardForm.cardNumber, cardForm.expirationDate, cardForm.cvv, totalPrice);
         if(hasMoney) {
             for (Bike bike : userCart) {
                 try {
