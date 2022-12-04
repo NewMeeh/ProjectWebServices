@@ -1,8 +1,9 @@
 package fr.uge.rmi.common;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Bike {
+public class Bike implements Serializable {
 
     private final long bikeId;
     private final long ownerId;
@@ -72,15 +73,10 @@ public class Bike {
         return grades.stream().mapToDouble(a->a).average().orElse(0);
     }
 
-    public long getId() { return bikeId;}
+    public long getBikeId() { return bikeId; }
 
     public void add(long userId) {
         if(userId > -2) this.waiters.add(userId);
-    }
-
-
-    public long getBikeId() {
-        return bikeId;
     }
 
     public long getOwnerId() {

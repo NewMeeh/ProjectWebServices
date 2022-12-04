@@ -57,7 +57,7 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
     }
 
     private Bike getBikeById(long bikeId) {
-        return bikes.stream().filter(bike -> bike.getId() == bikeId).findFirst().orElse(null);
+        return bikes.stream().filter(bike -> bike.getBikeId() == bikeId).findFirst().orElse(null);
     }
 
     public Bike getBikeById(String token, long id) {
