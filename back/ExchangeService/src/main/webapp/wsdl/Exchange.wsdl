@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://exchange.uge.fr" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://exchange.uge.fr" xmlns:intf="http://exchange.uge.fr" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://exchange.uge.fr" xmlns="http://www.w3.org/2001/XMLSchema">
+   <element name="exchange">
+    <complexType>
+     <sequence>
+      <element name="originCurrency" type="xsd:string"/>
+      <element name="targetCurrency" type="xsd:string"/>
+      <element name="amount" type="xsd:float"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="exchangeResponse">
+    <complexType>
+     <sequence>
+      <element name="exchangeReturn" type="xsd:float"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="exchangeResponse">
+
+      <wsdl:part element="impl:exchangeResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="exchangeRequest">
+
+      <wsdl:part element="impl:exchange" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="Exchange">
+
+      <wsdl:operation name="exchange">
+
+         <wsdl:input message="impl:exchangeRequest" name="exchangeRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:exchangeResponse" name="exchangeResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="ExchangeSoapBinding" type="impl:Exchange">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="exchange">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="exchangeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="exchangeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="ExchangeService">
+
+      <wsdl:port binding="impl:ExchangeSoapBinding" name="Exchange">
+
+         <wsdlsoap:address location="http://localhost:8080/ExchangeService/services/Exchange"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

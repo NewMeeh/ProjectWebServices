@@ -6,18 +6,50 @@ export class Bike extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            type: props.type,
             item: props.item,
             owner: props.item.ownerName,
             price: props.item.locationPrice,
             rating: props.item.avgGrade,
             name: props.item.bikeName
         };
+        this.removeBike = this.removeBike.bind(this);
+        this.returnBike = this.returnBike.bind(this);
+    }
+
+    removeBike(){
+        const that = this;
+        const requestOptions = {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('token') },
+        };
+        console.log("this is "+ that.state);
+        fetch('http://localhost:1100/bikes/'+this.state.item.bikeId, requestOptions)
+            .then(response => response.text())
+            .then(data => {
+                
+            });
+    }
+
+    returnBike(){
+        const that = this;
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('token') },
+            body: this.state.item.bikeId
+        };
+        console.log("this is "+ that.state);
+        fetch('http://localhost:1100/bikes/turnIn', requestOptions)
+            .then(response => response.text())
+            .then(data => {
+
+            });
     }
 
     render() {
         const title = this.state.owner + "'s " + this.state.name ;
+        if (this.state.type == 1)
         return (
-            <Col span={6}>
             <Card
                 hoverable
                 style={{width: 240, margin: "auto"}}
@@ -27,28 +59,54 @@ export class Bike extends React.Component {
                 <p className="price">{this.state.price + "$"}</p>
                 <BikeDesc item={this.state.item}></BikeDesc>
             </Card>
-            </Col>
         );
+        if (this.state.type == 2)
+            return (
+                <Card
+                    hoverable
+                    style={{width: 240, margin: "auto"}}
+                    cover={<img alt="Bike" src="https://i0.wp.com/goodcobikeclub.com/wp-content/uploads/2020/07/qi-bin-w4hbafegiac-unsplash.jpg?ssl=1"/>}
+                >
+                    <Meta title={title} description={this.state.rating + " stars"}/>
+                    <p className="price">{this.state.price + "$"}</p>
+                    <Button type="primary" onClick={this.removeBike}>Remove</Button>
+                </Card>
+            );
+        if (this.state.type == 3)
+            return (
+                <Card
+                    hoverable
+                    style={{width: 240, margin: "auto"}}
+                    cover={<img alt="Bike" src="https://i0.wp.com/goodcobikeclub.com/wp-content/uploads/2020/07/qi-bin-w4hbafegiac-unsplash.jpg?ssl=1"/>}
+                >
+                    <Meta title={title} description={this.state.rating + " stars"}/>
+                    <p className="price">{this.state.price + "$"}</p>
+                    <Button type="primary" onClick={this.returnBike}>Remove</Button>
+                </Card>
+            )
     }
 }
+
 
 export class BikeList extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            key: props.key,
+            type: props.type,
             request: props.request,
             itemList: null,
         }
     }
-    
+
     componentDidMount() {
         const that = this;
         const requestOptions = {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('token') },
         };
-        fetch('http://localhost:1100/bikes', requestOptions)
+        fetch('http://localhost:1100/bikes'+this.state.request, requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -56,8 +114,8 @@ export class BikeList extends React.Component {
             });
     }
 
-    createCard (index, item){
-        return <Bike key={index} item={item}/>;
+    createCard (index, item, type){
+        return <Bike key={index} item={item} type={type}/>;
     }
 
     render() {
@@ -65,7 +123,7 @@ export class BikeList extends React.Component {
         let itemList=[];
         if (rq != null) {
             rq.forEach((item, index) => {
-                itemList.push(this.createCard(index, item))
+                itemList.push(this.createCard(index, item, this.state.type))
             })
         }
         return(
@@ -86,6 +144,16 @@ const BikeDesc = (props) => {
             setLoading(false);
             setOpen(false);
         }, 3000);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('token') },
+            body: props.item.bikeId
+        };
+        fetch('http://localhost:1100/bikes/rent', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            });
     };
     const handleCancel = () => {
         setOpen(false);

@@ -1,0 +1,31 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from ExchangeService WSDL service -->
+
+  <service name="Exchange" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://exchange.uge.fr"/>
+      <parameter name="wsdlServiceElement" value="ExchangeService"/>
+      <parameter name="schemaQualified" value="http://exchange.uge.fr"/>
+      <parameter name="wsdlServicePort" value="Exchange"/>
+      <parameter name="className" value="fr.uge.exchange.ExchangeSoapBindingImpl"/>
+      <parameter name="wsdlPortType" value="Exchange"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="exchange" qname="operNS:exchange" xmlns:operNS="http://exchange.uge.fr" returnQName="retNS:exchangeReturn" xmlns:retNS="http://exchange.uge.fr" returnType="rtns:float" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="pns:originCurrency" xmlns:pns="http://exchange.uge.fr" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:targetCurrency" xmlns:pns="http://exchange.uge.fr" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:amount" xmlns:pns="http://exchange.uge.fr" type="tns:float" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <parameter name="allowedMethods" value="exchange"/>
+
+  </service>
+</deployment>
