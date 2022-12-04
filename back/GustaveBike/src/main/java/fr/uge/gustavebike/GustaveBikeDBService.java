@@ -58,7 +58,7 @@ public class GustaveBikeDBService {
         return uuid.toString();
     }
 
-    @PostMapping(value = "/login")
+    @PostMapping("/login")
     public String login(@RequestBody GBUser gbUser) {
         for(Map.Entry<Long, GBUser> user : users.entrySet()) {
             if(user.getValue().isUser(gbUser.username()) && user.getValue().isPassword(gbUser.password())) {
@@ -113,7 +113,7 @@ public class GustaveBikeDBService {
     }
 
     /* Voir le type de requete avec toto */
-    @PostMapping("/myCart")
+    @PostMapping("/myCart/buy")
     public void buy(@RequestHeader("gtoken") String gtoken) {
         var userId = checkValidAndGetId(gtoken);
         var userCart = allCarts.get(userId);
@@ -191,7 +191,7 @@ public class GustaveBikeDBService {
         return allCarts.get(userId);
     }
 
-    @GetMapping("")
+    @GetMapping("/bikes")
     public Collection<Bike> getBikes(/*@RequestHeader("gtoken") String gtoken*/) {
         try {
             return bikeService.getSellBikes();
