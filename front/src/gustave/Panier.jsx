@@ -1,26 +1,23 @@
-import { Layout, Menu, Row} from 'antd';
+import { Layout,} from 'antd';
 import { Divider } from 'antd';
 import {BikeList} from './bikes'
 import 'antd/dist/reset.css';
 import "./index.css";
-import React, {useState, useEffect} from "react";
-import {getToken} from './index'
+import React, {useEffect} from "react";
+import {getToken} from './Main'
 import { useNavigate } from 'react-router-dom';
 import MenuBar from './MenuBar'
-const { Header, Footer, Content } = Layout;
+const {Footer, Content } = Layout;
 
-export const Panier = () => {
-
-    const [usr, setUsr] = useState(0);
-
+export const GPanier = () => {
     const navigate = useNavigate();
     useEffect(() => {
         if (!getToken()) {
-            navigate("/login");
+            navigate("/gustave/login");
         }
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin":"*" },
+            headers: { 'Content-Type': 'application/json', },
             body: JSON.stringify({ username: ".", password: "."})
         };
         fetch('http://localhost:1080/userInfo', requestOptions)

@@ -1,11 +1,11 @@
-import { Button, Checkbox, Form, Input, InputNumber, Tooltip, DatePicker, Group } from 'antd';
+import { Button, Form, Input, Tooltip, DatePicker} from 'antd';
 import 'antd/dist/reset.css';
 import "./index.css";
 import {useEffect} from "react";
-import {getToken} from './index'
+import {getToken} from './Main'
 import { useNavigate } from 'react-router-dom';
 
-export const Payment = () => {
+export const GPayment = () => {
 
     const requestOptions = {
         method: 'POST',
@@ -47,7 +47,7 @@ export const Payment = () => {
     const navigate = useNavigate();
     useEffect(() => {
         if (!getToken()) {
-            //navigate("/login");
+            navigate("/gustave/login");
         }
     });
 

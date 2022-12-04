@@ -1,28 +1,22 @@
-import { Layout, Menu, Row} from 'antd';
+import { Layout, Row} from 'antd';
 import { Divider } from 'antd';
 import {BikeList} from './bikes'
 import 'antd/dist/reset.css';
 import "./index.css";
-import React, {useState, useEffect} from "react";
-import {getToken} from './index'
+import React, {useEffect} from "react";
+import {getToken} from './Main'
 import { useNavigate } from 'react-router-dom';
 import MenuBar from './MenuBar'
-const { Header, Footer, Content } = Layout;
+const {Footer, Content } = Layout;
 
-export const Profile = () => {
-
-    const [usr, setUsr] = useState(0);
+export const EProfile = () => {
 
     const navigate = useNavigate();
     useEffect(() => {
         if (!getToken()) {
-            navigate("/login");
+            navigate("/eiffel/login");
         }
     });
-
-    const onClick = (e) => {
-        navigate("/"+e.key);
-    };
 
     return (
         <Layout>
@@ -61,7 +55,7 @@ export class UsrList extends React.Component {
         const that = this;
         const requestOptions = {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('token') },
+            headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('etoken') },
         };
         fetch('http://localhost:1100/bikes/me', requestOptions)
             .then(response => response.json())
@@ -72,10 +66,9 @@ export class UsrList extends React.Component {
 
     render() {
         const rq = this.state.usr;
-        let itemList = [];
         if (rq == null) {
             return (
-                <h2></h2>
+                <></>
             );
         }
         else {
