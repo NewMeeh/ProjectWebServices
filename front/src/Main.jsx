@@ -18,14 +18,19 @@ export const Main = () => {
         }
     });
 
+    const onClick = (e) => {
+        navigate("/"+e.key);
+    };
+
     return (
             <Layout>
                 <Header>
                     <Menu
-                        theme="light"
+                        onClick={onClick}
+                        theme="dark"
                         mode="horizontal"
-                        defaultSelectedKeys={['1']}
-                        items={[{label: 'Profile', key: '1'}, {label: 'Panier', key: '2'}]}
+                        defaultSelectedKeys={['']}
+                        items={[{label: 'Acceuil', key: ''}, {label: 'Profile', key: 'profile'},{label: 'Panier', key: 'Panier'}]}
                     />
                 </Header>
                 <Layout>
@@ -36,7 +41,7 @@ export const Main = () => {
                         </Row>
                     </Content>
                 </Layout>
-                <Footer>Footer</Footer>
+                <Footer><Divider orientation="right">UGEBikes3000 all rights reserved</Divider></Footer>
             </Layout>
         );
 }
