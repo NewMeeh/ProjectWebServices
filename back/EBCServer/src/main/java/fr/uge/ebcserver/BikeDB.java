@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -64,5 +65,20 @@ public class BikeDB {
 
     @GetMapping("/me")
     public HashMap<String, String> getUserInfo(@RequestHeader("token") String token) {return bikeDBService.getUserInfo(token);}
+
+    @GetMapping("/me/share")
+    public List<Bike> getMyShareBikes(@RequestHeader("token") String token) {
+        return bikeDBService.getMyShareBikes(token);
+    }
+
+    @GetMapping("/me/rent")
+    public List<Bike> getMyRentBikes(@RequestHeader("token") String token) {
+        return bikeDBService.getMyRentBikes(token);
+    }
+
+    @GetMapping("/me/sell")
+    public List<Bike> getMySellBikes(@RequestHeader("token") String token) {
+        return bikeDBService.getMySellBikes(token);
+    }
 
 }

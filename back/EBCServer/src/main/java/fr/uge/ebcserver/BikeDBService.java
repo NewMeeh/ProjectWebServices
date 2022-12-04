@@ -10,10 +10,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
@@ -147,6 +144,18 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
             throw new RuntimeException(e);
         }
     }
-    //TODO mes vélo que je loue, mes vélo que j'utilise actuellement, mes vélo que je vend
+
+    public List<Bike> getMyShareBikes(String token) {
+        var myId = checkValidAndGetId(token);
+        return getBikes(token).stream().filter(b -> b.getOwnerId() == myId && b.getUserId() != -2).toList();
+    }
+    public List<Bike> getMyRentBikes(String token) {
+        var myId = checkValidAndGetId(token);
+        return getBikes(token).stream().filter(b -> b.getUserId() == myId).toList();
+    }
+    public List<Bike> getMySellBikes(String token) {
+        var myId = checkValidAndGetId(token);
+        return getBikes(token).stream().filter(b -> b.getOwnerId() == myId && b.getUserId() == -2).toList();
+    }
 }
 

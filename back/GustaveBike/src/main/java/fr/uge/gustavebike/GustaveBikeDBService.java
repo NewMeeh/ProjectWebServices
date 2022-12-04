@@ -210,7 +210,14 @@ public class GustaveBikeDBService {
         }
     }
 
-    /*public HashMap<String, String> getUserInfo(String token) {
-        return ugeService.getUserInfo(token);
-    }*/
+    @GetMapping("/me")
+    public HashMap<String, String> getUserInfo(String token) throws RemoteException {
+        var userInfos = connectedUsers.get(token);
+        var ret = new HashMap<String, String>();
+        ret.put("username", userInfos.username());
+        ret.put("fname", userInfos.firstName());
+        ret.put("lname", userInfos.lastName());
+        ret.put("mail", userInfos.mail());
+        return ret;
+    }
 }
