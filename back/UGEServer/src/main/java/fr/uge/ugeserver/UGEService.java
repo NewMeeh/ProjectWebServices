@@ -87,4 +87,15 @@ public class UGEService extends UnicastRemoteObject implements IUGEDB {
         logger.info("logout previous token were " + token);
     }
 
+    @Override
+    public HashMap<String, String> getUserInfo(String token) throws RemoteException {
+        var userInfos = connectedUsers.get(token);
+        var ret = new HashMap<String, String>();
+        ret.put("username", userInfos.username());
+        ret.put("fname", userInfos.firstName());
+        ret.put("lname", userInfos.lastName());
+        ret.put("mail", userInfos.mail());
+        return ret;
+    }
+
 }

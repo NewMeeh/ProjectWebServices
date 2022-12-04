@@ -1,15 +1,19 @@
 package fr.uge.gustavebike;
 
+import fr.uge.ebcserver.exception.ForbiddenException;
 import fr.uge.rmi.common.Bike;
 import fr.uge.rmi.common.IBikeDB;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.logging.Level;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/gbs")
@@ -60,10 +64,10 @@ public class GustaveBikeDBService {
             if(user.getValue().isUser(gbUser.username()) && user.getValue().isPassword(gbUser.password())) {
                 var token = randomToken();
                 connectedUsers.put(token, user.getValue());
-                /*si le user n'a pas son id dans allCarts:
-                * cree un cart (new arraylist<Bike>)
-                * ajouter dans allCarts le user id et son cart
-                */
+                if (!allCarts.containsKey(gbUser.id)) {
+                    var cart = new ArrayList<Bike>();
+                    allCarts.put(gbUser.id, cart);
+                }
                 logger.info("login success token is " + token);
                 return token;
             }
@@ -73,6 +77,25 @@ public class GustaveBikeDBService {
         return null;
     }
 
+    public long isTokenValid(String token) {
+        logger.info("token is " + token);
+        for(var e : connectedUsers.entrySet()) {
+            if (e.getKey().equals(token)) {
+                logger.info("success : token is valid" + e.getValue());
+                return e.getValue().id();
+            }
+        }
+        logger.info("failure : token doesn't exist");
+        return -1;
+    }
+
+    private long checkValidAndGetId(String token) {
+        long id = isTokenValid(token);
+        if (id < 0) throw new ForbiddenException(new IllegalArgumentException("Token is not valid"));
+        return id;
+
+    }
+
     @PostMapping(value = "/logout")
     public void logout(@RequestHeader("gtoken") String gtoken) {
         connectedUsers.remove(gtoken);
@@ -80,65 +103,114 @@ public class GustaveBikeDBService {
     }
 
     @PostMapping(value = "/signIn")
-    public void signIn() {
+    public void signIn(String userName, String pwd, String fname, String lname, String mail) {
         /*
         * permet une inscription
         */
+        if(users.values().stream().noneMatch(user -> user.username == userName || user.mail == mail)) {
+            users.put((long) users.size(), new GBUser((long) users.size(), userName, pwd, fname, lname, mail));
+        }
     }
 
     /* Voir le type de requete avec toto */
     @PostMapping("/myCart")
-    public void buy(String gtoken) {
-        /* RMI sur EBC
-        * pour tous les bike du cart:
-        * lance bank(allbikeincart.price)
-        * si ok:
-        * lance EBC.remove(getbikebyid(bike_id)) sur allbikeincart
-        * lance notif d'achat
-        * vide le cart
-        * sinon:
-        * lance notif refus bank
-        * exit buy
-        */
+    public void buy(@RequestHeader("gtoken") String gtoken) {
+        var userId = checkValidAndGetId(gtoken);
+        var userCart = allCarts.get(userId);
+        var totalPrice = (float) userCart.stream().mapToDouble(b -> b.getResalePrice()).sum();
+        /*check bank*/
+        if(true) {
+            for (Bike bike : userCart) {
+                try {
+                    bikeService.remove(bike.getBikeId());
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, e.getMessage());
+                }
+            }
+            /*affiche notif : bravo pour votre achat*/
+            emptyCart(gtoken);
+        } else {
+            /*affiche notif : t'es qu'une sale merde de pauvre*/
+        }
     }
+
+    private boolean isInAllCarts(Bike bike) {
+        var nbBikePresent = allCarts.values().stream().filter(cart -> cart.contains(bike)).count();
+        if(nbBikePresent == 0) {
+            return false;
+        }
+        if(nbBikePresent == 1) {
+            return true;
+        }
+        throw new IllegalStateException("A same bike can't be in more than one cart");
+    }
+
     @PostMapping("/myCart/{bikeId}")
-    public void addToCart(String gtoken) {
-        /*
-         * ajoute selectedbike ds cart
-         */
+    public void addToCart(@RequestHeader("gtoken") String gtoken, @PathVariable long bikeId) {
+        var userId = checkValidAndGetId(gtoken);
+        var userCart = allCarts.get(userId);
+        try {
+            var bike = bikeService.getSellBikeById(bikeId);
+            if(bike != null && !isInAllCarts(bike)) {
+                userCart.add(bike);
+                bikeService.unRent(bikeId);
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
     }
     @DeleteMapping("/myCart/{bikeId}")
-    public void removeFromCart(String gtoken) {
-        /*
-         * retire selectedbike ds cart
-         */
+    public void removeFromCart(@RequestHeader("gtoken") String gtoken, @PathVariable long bikeId) {
+        var userId = checkValidAndGetId(gtoken);
+        var userCart = allCarts.get(userId);
+        var bike = userCart.stream().filter(b -> b.getBikeId() == bikeId).collect(Collectors.toList());
+        userCart.remove(bike.get(0));
+        try {
+            bikeService.reRent(bike.get(0).getBikeId());
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
     }
     @DeleteMapping("/myCart")
-    public void emptyCart(String gtoken) {
-        /*
-         * retire allbikes du cart
-         */
+    public void emptyCart(@RequestHeader("gtoken") String gtoken) {
+        var userId = checkValidAndGetId(gtoken);
+        var userCart = allCarts.get(userId);
+        var bikes = userCart;
+        userCart.removeAll(bikes);
+        try {
+            for (Bike bike: bikes) {
+                bikeService.reRent(bike.getBikeId());
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
     }
     @GetMapping("/myCart")
-    public void getCart(String gtoken) {
-        /*
-         * renvoie cart<bike>
-         */
+    public ArrayList<Bike> getCart(@RequestHeader("gtoken") String gtoken) {
+        var userId = checkValidAndGetId(gtoken);
+        return allCarts.get(userId);
     }
 
     @GetMapping("")
-    public Collection<Bike> getBikes(@RequestHeader("gtoken") String gtoken) {
-        /* RMI sur EBC
-        * renvoie tous les bikes dispo à la vente.
-        */
-        return null;
+    public Collection<Bike> getBikes(/*@RequestHeader("gtoken") String gtoken*/) {
+        try {
+            return bikeService.getSellBikes();
+        } catch (RemoteException e) {
+            logger.log(Level.SEVERE, e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
     @GetMapping("/{id}")
-    public Bike getBikeById(@RequestHeader("gtoken") String gtoken, @PathVariable long id) {
-        /* RMI sur EBC
-         * renvoie tous le bikes si dispo à la vente
-         * sinon exit la fonction.
-         */
-        return null;
+    public Bike getBikeById(/*@RequestHeader("gtoken") String gtoken,*/ @PathVariable long id) {
+        try {
+            return bikeService.getSellBikeById(id);
+        } catch (RemoteException e) {
+            logger.log(Level.SEVERE, e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
+
+    /*public HashMap<String, String> getUserInfo(String token) {
+        return ugeService.getUserInfo(token);
+    }*/
 }

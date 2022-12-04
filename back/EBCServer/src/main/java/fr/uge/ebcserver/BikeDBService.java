@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -41,7 +42,7 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
         Objects.requireNonNull(bike);
         try {
             long userId = checkValidAndGetId(token);
-            bikes.add(new Bike(userId, ugeService.getNameById(userId), currentBikeId++, bike.name(), bike.locationPrice(), bike.description()));
+            bikes.add(new Bike(userId, ugeService.getNameById(userId), currentBikeId++, bike.name(), bike.locationPrice(), bike.resalePrice(), bike.description()));
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -73,14 +74,17 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
         long userId = checkValidAndGetId(token);
         Bike bike = this.getBikeById(bikeId);
 
-        if (bike.isRented()) {
-            bike.add(userId);
+        if(!bike.isInCart()) {
+            if (bike.isRented()) {
+                bike.add(userId);
+                logger.info(bike.toString());
+                return 2;
+            }
+            bike.setUserId(userId);
             logger.info(bike.toString());
-            return 2;
+            return 1;
         }
-        bike.setUserId(userId);
-        logger.info(bike.toString());
-        return 1;
+        return 0;
     }
 
     public void rank(String token, BikeDB.RankForm rankForm) {
@@ -106,18 +110,43 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
     }
 
     @Override
-    public Collection<Bike> displayBikes() throws RemoteException {
-        return bikes.stream().filter(Bike::isUsed).toList();
+    public Collection<Bike> getSellBikes() throws RemoteException {
+        return bikes.stream().filter(b -> b.isUsed() && !b.isRented()).toList();
     }
 
     @Override
-    public Bike displayBikeById(long bikeId) throws RemoteException {
-        return bikes.stream().filter(b -> b.getBikeId()==bikeId).findFirst().orElse(null);
+    public Bike getSellBikeById(long bikeId) throws RemoteException {
+
+        var bikeToSell = bikes.stream().filter(b -> b.getBikeId() == bikeId).findFirst().orElse(null);
+        if (bikeToSell != null && bikeToSell.isUsed() && !bikeToSell.isRented()) {
+            return bikeToSell;
+        }
+        return null;
     }
+
+    @Override
+    public void unRent(long bikeId) throws RemoteException {
+        getBikeById(bikeId).unRent();
+    }
+
+    @Override
+    public void reRent(long bikeId) throws RemoteException {
+        getBikeById(bikeId).reRent();
+    }
+
 
     @Override
     public void remove(long bikeId) throws RemoteException {
         bikes.remove(bikeId);
     }
+
+    public HashMap<String, String> getUserInfo(String token) {
+        try {
+            return ugeService.getUserInfo(token);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    //TODO mes vélo que je loue, mes vélo que j'utilise actuellement, mes vélo que je vend
 }
 
