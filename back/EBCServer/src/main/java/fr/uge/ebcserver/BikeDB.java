@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -15,7 +17,8 @@ public class BikeDB {
     private BikeDBService bikeDBService;
 
 
-    record BikeForm(String name, float locationPrice, String description){}
+    record BikeForm(String name, float locationPrice, float resalePrice, String description){
+    }
     @PutMapping
     public void addBike(@RequestHeader("token") String token, @RequestBody BikeForm bikeForm) {
         Objects.requireNonNull(token);
@@ -58,6 +61,24 @@ public class BikeDB {
     public void turnIn(@RequestHeader("token") String token, @RequestBody long bikeId) {
         Objects.requireNonNull(token);
         bikeDBService.turnIn(token, bikeId);
+    }
+
+    @GetMapping("/me")
+    public HashMap<String, String> getUserInfo(@RequestHeader("token") String token) {return bikeDBService.getUserInfo(token);}
+
+    @GetMapping("/me/share")
+    public List<Bike> getMyShareBikes(@RequestHeader("token") String token) {
+        return bikeDBService.getMyShareBikes(token);
+    }
+
+    @GetMapping("/me/rent")
+    public List<Bike> getMyRentBikes(@RequestHeader("token") String token) {
+        return bikeDBService.getMyRentBikes(token);
+    }
+
+    @GetMapping("/me/sell")
+    public List<Bike> getMySellBikes(@RequestHeader("token") String token) {
+        return bikeDBService.getMySellBikes(token);
     }
 
 }
