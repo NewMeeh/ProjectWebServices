@@ -1,15 +1,16 @@
-import { Card, Col } from 'antd';
-import React from 'react';
+import { Card, Col, Button, Modal } from 'antd';
+import React, { useState } from 'react';
 const { Meta } = Card;
 
 export class Bike extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            owner: props.owner,
-            price: props.price,
-            rating: props.rating,
-            name: props.bikeName
+            item: props.item,
+            owner: props.item.ownerName,
+            price: props.item.locationPrice,
+            rating: props.item.avgGrade,
+            name: props.item.bikeName
         };
     }
 
@@ -24,6 +25,7 @@ export class Bike extends React.Component {
             >
                 <Meta title={title} description={this.state.rating + " stars"}/>
                 <p className="price">{this.state.price + "$"}</p>
+                <BikeDesc item={this.state.item}></BikeDesc>
             </Card>
             </Col>
         );
@@ -35,9 +37,11 @@ export class BikeList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            request: props.request,
             itemList: null,
         }
     }
+    
     componentDidMount() {
         const that = this;
         const requestOptions = {
@@ -51,8 +55,9 @@ export class BikeList extends React.Component {
                 that.setState({itemList: data});
             });
     }
+
     createCard (index, item){
-        return <Bike key={index} owner={item.ownerName} price={item.locationPrice} rating={item.avgGrade} owned={item.rented} bikeName={item.bikeName}/>;
+        return <Bike key={index} item={item}/>;
     }
 
     render() {
@@ -68,3 +73,51 @@ export class BikeList extends React.Component {
         );
     }
 }
+
+const BikeDesc = (props) => {
+    const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+    const showModal = () => {
+        setOpen(true);
+    };
+    const handleOk = () => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+            setOpen(false);
+        }, 3000);
+    };
+    const handleCancel = () => {
+        setOpen(false);
+    };
+    const title = props.item.ownerName + "'s " + props.item.bikeName ;
+
+    return (
+        <>
+            <Button type="primary" onClick={showModal}>
+                More
+            </Button>
+            <Modal
+                open={open}
+                title={title}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                footer={[
+                    <Button key="back" onClick={handleCancel}>
+                        Return
+                    </Button>,
+                    <Button key="rent" loading={loading} onClick={handleOk}>
+                        {props.item.rented == false ? "Rent" : "WaitingList"}
+                    </Button>,
+                ]}
+            >
+                <p>{props.item.description}</p>
+                <br/>
+                <p>Disponible : {props.item.rented == false ? "Oui" : "Non"}</p>
+                <p>Prix : {props.item.locationPrice}$</p>
+                <p>Note : {props.item.avgGrade} stars ({props.item.grades.length} avis)</p>
+            </Modal>
+        </>
+    );
+};
+export default BikeDesc;
