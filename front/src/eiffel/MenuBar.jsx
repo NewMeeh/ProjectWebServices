@@ -9,7 +9,7 @@ export const EMenuBar = () => {
 
     const navigate = useNavigate();
     const onClick = (e) => {
-        navigate("/eiffel/"+e.key);
+        navigate(""+e.key);
     };
 
     return(
@@ -19,7 +19,7 @@ export const EMenuBar = () => {
             onClick={onClick}
             theme="dark"
             mode="horizontal"
-            items={[{label: 'Acceuil', key: ''}, {label: 'Profile', key: 'profile'}]}
+            items={[{label: 'Accueil', key: '/eiffel/'}, {label: 'Profile', key: '/eiffel/profile'}, {label: "Externes", key:'/gustave/'}]}
         />
     </Header>
     );

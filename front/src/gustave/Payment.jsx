@@ -69,14 +69,14 @@ export const GPayment = () => {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', "gtoken":localStorage.getItem('gtoken') },
-            body: {"cardNumber":values.cardnb, "expirationDate":date, "cvv":values.cvc}
+            body:  JSON.stringify({cardNumber:values.cardnb, expirationDate:date, cvv:values.cvc})
         };
         console.log(requestOptions.body)
         fetch('http://localhost:1090/gbs/myCart/buy', requestOptions)
             .then(response => response.text())
             .then(data => {
                 setTimeout(() => {}, 3000);
-                //window.location.reload(false);
+                navigate("/gustave");
             });
 
     };
