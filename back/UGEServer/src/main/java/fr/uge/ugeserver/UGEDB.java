@@ -3,10 +3,8 @@ package fr.uge.ugeserver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/uge")
-@CrossOrigin(origins = "http://localhost", maxAge = 3600,allowedHeaders = "Requestor-Type", exposedHeaders = "X-Get-Header")
 public class UGEDB {
 
     @Autowired
