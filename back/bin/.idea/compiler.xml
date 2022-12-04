@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="EBCServer" />
+        <module name="GustaveBikeService" />
+        <module name="UGEServer" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="EBCServer" target="17" />
+      <module name="GustaveBike" target="17" />
+      <module name="GustaveBikeService" target="17" />
+      <module name="UGEServer" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="EBCServer" options="-parameters" />
+      <module name="GustaveBike" options="-parameters" />
+      <module name="GustaveBikeService" options="-parameters" />
+      <module name="UGEServer" options="-parameters" />
+    </option>
+  </component>
+</project>
