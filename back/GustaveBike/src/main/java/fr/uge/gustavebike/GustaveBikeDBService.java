@@ -1,10 +1,16 @@
 package fr.uge.gustavebike;
 
+import fr.uge.bank.Bank;
+import fr.uge.bank.BankServiceLocator;
 import fr.uge.ebcserver.exception.ForbiddenException;
+import fr.uge.exchange.Exchange;
+import fr.uge.exchange.ExchangeService;
+import fr.uge.exchange.ExchangeServiceLocator;
 import fr.uge.rmi.common.Bike;
 import fr.uge.rmi.common.IBikeDB;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.rpc.ServiceException;
 import java.util.logging.Level;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -34,11 +40,13 @@ public class GustaveBikeDBService {
     private final IBikeDB bikeService;
     private final HashMap<Long, GBUser> users = new HashMap<>();
     private final HashMap<String, GBUser> connectedUsers = new HashMap<>();
+    private final ExchangeService exchangeService = new ExchangeServiceLocator();
+    private final Bank bankService = new BankServiceLocator().getBank();
 
     /* Pour chaque userId une liste est associé(le cart du user) */
     private final HashMap<Long, ArrayList<Bike>> allCarts = new HashMap<>();
 
-    public GustaveBikeDBService() throws RemoteException, MalformedURLException, NotBoundException {
+    public GustaveBikeDBService() throws RemoteException, MalformedURLException, NotBoundException, ServiceException {
         fillHashMapWithExempleData();
         bikeService = (IBikeDB) Naming.lookup("rmi://localhost:1089/bikeService");
     }
@@ -96,6 +104,12 @@ public class GustaveBikeDBService {
 
     }
 
+    record ExchangeForm(String originCurrency, String targetCurrency, float amount){}
+    @PostMapping(value="/exchange")
+    public float exchange(@RequestBody ExchangeForm exchangeForm) throws RemoteException, ServiceException {
+        return this.exchangeService.getExchange().exchange(exchangeForm.originCurrency, exchangeForm.targetCurrency, exchangeForm.amount);
+    }
+
     @PostMapping(value = "/logout")
     public void logout(@RequestHeader("gtoken") String gtoken) {
         connectedUsers.remove(gtoken);
@@ -112,14 +126,16 @@ public class GustaveBikeDBService {
         }
     }
 
+
+    record CardForm(String cardNumber, String expirationDate, String cvv, float amount){}
     /* Voir le type de requete avec toto */
-    @PostMapping("/myCart")
-    public void buy(@RequestHeader("gtoken") String gtoken) {
+    @PostMapping("/myCart/buy")
+    public void buy(@RequestHeader("gtoken") String gtoken, @RequestBody CardForm cardForm) throws RemoteException {
         var userId = checkValidAndGetId(gtoken);
         var userCart = allCarts.get(userId);
         var totalPrice = (float) userCart.stream().mapToDouble(b -> b.getResalePrice()).sum();
-        /*check bank*/
-        if(true) {
+        var hasMoney = bankService.pay(cardForm.cardNumber, cardForm.expirationDate, cardForm.cvv, cardForm.amount);
+        if(hasMoney) {
             for (Bike bike : userCart) {
                 try {
                     bikeService.remove(bike.getBikeId());
@@ -191,7 +207,7 @@ public class GustaveBikeDBService {
         return allCarts.get(userId);
     }
 
-    @GetMapping("")
+    @GetMapping("/bikes")
     public Collection<Bike> getBikes(/*@RequestHeader("gtoken") String gtoken*/) {
         try {
             return bikeService.getSellBikes();
