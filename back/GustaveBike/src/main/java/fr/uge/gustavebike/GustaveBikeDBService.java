@@ -64,6 +64,7 @@ public class GustaveBikeDBService {
             if(user.getValue().isUser(gbUser.username()) && user.getValue().isPassword(gbUser.password())) {
                 var token = randomToken();
                 connectedUsers.put(token, user.getValue());
+                logger.info(connectedUsers.toString());
                 if (!allCarts.containsKey(gbUser.id)) {
                     var cart = new ArrayList<Bike>();
                     allCarts.put(gbUser.id, cart);
@@ -211,8 +212,9 @@ public class GustaveBikeDBService {
     }
 
     @GetMapping("/me")
-    public HashMap<String, String> getUserInfo(String token) throws RemoteException {
-        var userInfos = connectedUsers.get(token);
+    public HashMap<String, String> getUserInfo(@RequestHeader("gtoken") String gtoken) throws RemoteException {
+        var userInfos = connectedUsers.get(gtoken);
+        logger.info(userInfos.firstName);
         var ret = new HashMap<String, String>();
         ret.put("username", userInfos.username());
         ret.put("fname", userInfos.firstName());
