@@ -58,15 +58,6 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
         return bikes;
     }
 
-/*    public Collection<Bike> getFrontInfoBikes(String token) {
-        checkValidAndGetId(token);
-        var l = new List<Bike>();
-        for (Bike bike:
-             bikes) {
-
-        }
-    }*/
-
     private Bike getBikeById(long bikeId) {
         return bikes.stream().filter(bike -> bike.getId() == bikeId).findFirst().orElse(null);
     }
