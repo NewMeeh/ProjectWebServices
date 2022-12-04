@@ -32,10 +32,9 @@ export const GMain = () => {
                 <MenuBar/>
                 <Layout>
                     <Content>
-                        <Divider><AddBike></AddBike></Divider>
                         <Divider orientation="left">Bikes</Divider>
                         <Row gutter={[16, 16]} justify="space-between" align="middle">
-                            <BikeList request={""} type={1}/>
+                            <BikeList request={"/bikes"} type={1}/>
                         </Row>
                     </Content>
                 </Layout>
