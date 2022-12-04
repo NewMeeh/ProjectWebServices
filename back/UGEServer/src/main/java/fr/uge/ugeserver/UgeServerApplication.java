@@ -28,7 +28,6 @@ public class UgeServerApplication {
             UGEDB ugedb = new UGEDB();
             Naming.rebind("UGEDB", ugedb);
 */
-
             SpringApplication.run(UgeServerApplication.class, args);
 
         } catch(Exception e){
