@@ -1,15 +1,15 @@
 import { Layout, Menu} from 'antd';
 import 'antd/dist/reset.css';
 import "./index.css";
-import React, {useState, useEffect} from "react";
+import React from "react";
 import { useNavigate } from 'react-router-dom';
 
-const { Header, Footer, Content } = Layout;
+const { Header } = Layout;
 export const MenuBar = () => {
 
     const navigate = useNavigate();
     const onClick = (e) => {
-        navigate("/"+e.key);
+        navigate("/gustave/"+e.key);
     };
 
     return(

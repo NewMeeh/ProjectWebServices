@@ -14,76 +14,52 @@ export class Bike extends React.Component {
             name: props.item.bikeName
         };
         this.removeBike = this.removeBike.bind(this);
-        this.returnBike = this.returnBike.bind(this);
     }
 
     removeBike(){
         const that = this;
         const requestOptions = {
             method: 'DELETE',
-            headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('token') },
+            headers: { 'Content-Type': 'application/json', "gtoken":localStorage.getItem('gtoken') },
         };
         console.log("this is "+ that.state);
-        fetch('http://localhost:1100/bikes/'+this.state.item.bikeId, requestOptions)
+        fetch('http://localhost:1090/myCart/'+this.state.item.bikeId, requestOptions)
             .then(response => response.text())
             .then(data => {
-                
-            });
-    }
-
-    returnBike(){
-        const that = this;
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('token') },
-            body: this.state.item.bikeId
-        };
-        console.log("this is "+ that.state);
-        fetch('http://localhost:1100/bikes/turnIn', requestOptions)
-            .then(response => response.text())
-            .then(data => {
-
+                window.location.reload(false);
             });
     }
 
     render() {
         const title = this.state.owner + "'s " + this.state.name ;
-        if (this.state.type == 1)
+        if (this.state.type === 1)
         return (
-            <Card
-                hoverable
-                style={{width: 240, margin: "auto"}}
-                cover={<img alt="Bike" src="https://i0.wp.com/goodcobikeclub.com/wp-content/uploads/2020/07/qi-bin-w4hbafegiac-unsplash.jpg?ssl=1"/>}
-            >
-                <Meta title={title} description={this.state.rating + " stars"}/>
-                <p className="price">{this.state.price + "$"}</p>
-                <BikeDesc item={this.state.item}></BikeDesc>
-            </Card>
+            <Col span={6}>
+                <Card
+                    hoverable
+                    style={{width: 240, margin: "auto"}}
+                    cover={<img alt="Bike" src="https://i0.wp.com/goodcobikeclub.com/wp-content/uploads/2020/07/qi-bin-w4hbafegiac-unsplash.jpg?ssl=1"/>}
+                >
+                    <Meta title={title} description={this.state.rating + " stars"}/>
+                    <p className="price">{this.state.price + "$"}</p>
+                    <BikeDesc item={this.state.item}></BikeDesc>
+                </Card>
+            </Col>
         );
-        if (this.state.type == 2)
+        if (this.state.type === 2)
             return (
-                <Card
-                    hoverable
-                    style={{width: 240, margin: "auto"}}
-                    cover={<img alt="Bike" src="https://i0.wp.com/goodcobikeclub.com/wp-content/uploads/2020/07/qi-bin-w4hbafegiac-unsplash.jpg?ssl=1"/>}
-                >
-                    <Meta title={title} description={this.state.rating + " stars"}/>
-                    <p className="price">{this.state.price + "$"}</p>
-                    <Button type="primary" onClick={this.removeBike}>Remove</Button>
-                </Card>
+                <Col span={6}>
+                    <Card
+                        hoverable
+                        style={{width: 240, margin: "auto"}}
+                        cover={<img alt="Bike" src="https://i0.wp.com/goodcobikeclub.com/wp-content/uploads/2020/07/qi-bin-w4hbafegiac-unsplash.jpg?ssl=1"/>}
+                    >
+                        <Meta title={title} description={this.state.rating + " stars"}/>
+                        <p className="price">{this.state.price + "$"}</p>
+                        <Button type="primary" onClick={this.removeBike}>Remove</Button>
+                    </Card>
+                </Col>
             );
-        if (this.state.type == 3)
-            return (
-                <Card
-                    hoverable
-                    style={{width: 240, margin: "auto"}}
-                    cover={<img alt="Bike" src="https://i0.wp.com/goodcobikeclub.com/wp-content/uploads/2020/07/qi-bin-w4hbafegiac-unsplash.jpg?ssl=1"/>}
-                >
-                    <Meta title={title} description={this.state.rating + " stars"}/>
-                    <p className="price">{this.state.price + "$"}</p>
-                    <Button type="primary" onClick={this.returnBike}>Remove</Button>
-                </Card>
-            )
     }
 }
 
@@ -104,9 +80,9 @@ export class BikeList extends React.Component {
         const that = this;
         const requestOptions = {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('token') },
+            headers: { 'Content-Type': 'application/json', "gtoken":localStorage.getItem('gtoken') },
         };
-        fetch('http://localhost:1100/bikes'+this.state.request, requestOptions)
+        fetch('http://localhost:1090/bikes'+this.state.request, requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -146,13 +122,15 @@ const BikeDesc = (props) => {
         }, 3000);
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('token') },
+            headers: { 'Content-Type': 'application/json', "gtoken":localStorage.getItem('gtoken') },
             body: props.item.bikeId
         };
-        fetch('http://localhost:1100/bikes/rent', requestOptions)
+        //Todo
+        fetch('http://localhost:1090/gbs/???', requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
+
             });
     };
     const handleCancel = () => {
@@ -175,13 +153,13 @@ const BikeDesc = (props) => {
                         Return
                     </Button>,
                     <Button key="rent" loading={loading} onClick={handleOk}>
-                        {props.item.rented == false ? "Rent" : "WaitingList"}
+                        {props.item.rented === false ? "Rent" : "WaitingList"}
                     </Button>,
                 ]}
             >
                 <p>{props.item.description}</p>
                 <br/>
-                <p>Disponible : {props.item.rented == false ? "Oui" : "Non"}</p>
+                <p>Disponible : {props.item.rented === false ? "Oui" : "Non"}</p>
                 <p>Prix : {props.item.locationPrice}$</p>
                 <p>Note : {props.item.avgGrade} stars ({props.item.grades.length} avis)</p>
             </Modal>

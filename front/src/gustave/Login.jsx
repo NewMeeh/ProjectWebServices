@@ -4,22 +4,22 @@ import React from "react";
 import { Button, Checkbox, Form, Input } from 'antd';
 import { useNavigate } from "react-router-dom";
 
-export const Login = () => {
+export const GLogin = () => {
 
     const navigate = useNavigate();
-    const handleRegisterClick = () => navigate("/register", { replace: true });
+    const handleRegisterClick = () => navigate("/gustave/register", { replace: true });
 
     const onFinish = (values: any) => {
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin":"*" },
+            headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({ username: values.username, password: values.password})
         };
-        fetch('http://localhost:1080/uge/login', requestOptions)
+        fetch('http://localhost:1080/gbs/login', requestOptions)
             .then(response => response.text())
             .then(data => {
-                if (data.localeCompare("") != 0) {
-                    localStorage.setItem('token', data)
+                if (data.localeCompare("") !== 0) {
+                    localStorage.setItem('gtoken', data)
                     navigate("/", { replace: true });
                 }
             });
@@ -57,10 +57,6 @@ export const Login = () => {
                     <Input.Password />
                 </Form.Item>
 
-                <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
-                    <Checkbox>Remember me</Checkbox>
-                </Form.Item>
-
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                     <Button type="primary" htmlType="submit">
                         Login
@@ -75,13 +71,25 @@ export const Login = () => {
 
 };
 
-export const Register = () => {
+export const GRegister = () => {
 
     const navigate = useNavigate();
-    const handleLoginClick = () => navigate("/login", { replace: true });
+    const handleLoginClick = () => navigate("/gustave/login", { replace: true });
 
     const onFinish = (values: any) => {
-        console.log('Success:', values);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({ username: values.username, password: values.password, email:values.email
+                                    ,tel:values.tel, age:values.age})
+        };
+        fetch('http://localhost:1090/gbs/signIn', requestOptions)
+            .then(response => response.text())
+            .then(data => {
+                if (data.localeCompare("") !== 0) {
+                    navigate("/gustave/login", { replace: true });
+                }
+            });
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -117,17 +125,17 @@ export const Register = () => {
                 </Form.Item>
 
                 <Form.Item
-                    label="First Name"
-                    name="fname"
-                    rules={[{ required: true, message: 'Please input your first name!' }]}
+                    label="Tel"
+                    name="tel"
+                    rules={[{ required: true, message: 'Please input your Telephone number!' }]}
                 >
                     <Input />
                 </Form.Item>
 
                 <Form.Item
-                    label="Last Name"
-                    name="lname"
-                    rules={[{ required: true, message: 'Please input your last name!' }]}
+                    label="Age"
+                    name="age"
+                    rules={[{ required: true, message: 'Please input your age!' }]}
                 >
                     <Input />
                 </Form.Item>
