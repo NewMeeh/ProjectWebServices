@@ -1,6 +1,7 @@
 import { Layout, Menu, Row} from 'antd';
 import { Divider } from 'antd';
 import {BikeList} from './bikes'
+import {MenuBar} from './MenuBar'
 import 'antd/dist/reset.css';
 import "./index.css";
 import React, {useEffect} from "react";
@@ -24,15 +25,7 @@ export const Main = () => {
 
     return (
             <Layout>
-                <Header>
-                    <Menu
-                        onClick={onClick}
-                        theme="dark"
-                        mode="horizontal"
-                        defaultSelectedKeys={['']}
-                        items={[{label: 'Acceuil', key: ''}, {label: 'Profile', key: 'profile'},{label: 'Panier', key: 'Panier'}]}
-                    />
-                </Header>
+                <MenuBar/>
                 <Layout>
                     <Content>
                         <Divider orientation="left">Bikes</Divider>

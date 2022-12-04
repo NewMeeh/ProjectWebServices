@@ -4,6 +4,7 @@ import {Main} from './Main'
 import {Login, Register} from './Login'
 import {Payment} from './Payment'
 import {Profile} from './Profile'
+import {Panier} from './Panier'
 
 export function getToken(){
     const token = localStorage.getItem('token');
@@ -18,7 +19,8 @@ const router = createBrowserRouter([
     {path: "/login", element: <Login/>},
     {path: "/register", element: <Register/>},
     {path: "/pay", element: <Payment/>},
-    {path: "/profile", element: <Profile/>}
+    {path: "/profile", element: <Profile/>},
+    {path: "/panier", element: <Panier/>}
 ]);
 
 const root = createRoot(document.getElementById("root"));
