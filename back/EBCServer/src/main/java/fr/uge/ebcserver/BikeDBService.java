@@ -134,7 +134,7 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
 
     @Override
     public void remove(long bikeId) throws RemoteException {
-        bikes.remove(bikeId);
+        bikes.remove(this.getBikeById(bikeId));
     }
 
     public HashMap<String, String> getUserInfo(String token) {
