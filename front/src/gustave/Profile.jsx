@@ -27,10 +27,6 @@ export const GProfile = () => {
                     <div style={{'padding':'10px 20px 10px 20px'}}>
                         <UsrList />
                     </div>
-                    <Divider orientation="left">My Bikes</Divider>
-                    <Row gutter={[16, 16]} justify="space-between" align="middle">
-                        <BikeList request={"/me/share"} type={2}/>
-                    </Row>
                 </Content>
             </Layout>
             <Footer><Divider orientation="right">UGEBikes3000 all rights reserved</Divider></Footer>
@@ -53,7 +49,7 @@ export class UsrList extends React.Component {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', "gtoken":localStorage.getItem('gtoken') },
         };
-        fetch('http://localhost:1100/bikes/me', requestOptions)
+        fetch('http://localhost:1090/gbs/me', requestOptions)
             .then(response => response.json())
             .then(data => {
                 that.setState({usr: data});
