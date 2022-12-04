@@ -82,7 +82,7 @@ export class BikeList extends React.Component {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', "gtoken":localStorage.getItem('gtoken') },
         };
-        fetch('http://localhost:1090/bikes'+this.state.request, requestOptions)
+        fetch('http://localhost:1090/gbs/bikes'+this.state.request, requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -126,7 +126,7 @@ const BikeDesc = (props) => {
             body: props.item.bikeId
         };
         //Todo
-        fetch('http://localhost:1090/gbs/???', requestOptions)
+        fetch('http://localhost:1090/gbs/bike', requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log(data);

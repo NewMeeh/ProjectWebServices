@@ -64,7 +64,7 @@ export const AddBike = (props) => {
             }, 3000);
             const requestOptions = {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json', "gtoken": localStorage.getItem('token')},
+                headers: {'Content-Type': 'application/json', "gtoken": localStorage.getItem('gtoken')},
                 body: props.item.bikeId
             };
             fetch('http://localhost:1100/bikes/rent', requestOptions)
@@ -77,7 +77,7 @@ export const AddBike = (props) => {
         const onFinish = (values: any) => {
             const requestOptions = {
                 method: 'PUT',
-                headers: {'Content-Type': 'application/json',  "gtoken": localStorage.getItem('token')},
+                headers: {'Content-Type': 'application/json',  "gtoken": localStorage.getItem('gtoken')},
                 body: JSON.stringify({name: values.name, locationPrice: values.price, description: values.desc})
             };
             fetch('http://localhost:1100/bikes', requestOptions)

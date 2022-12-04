@@ -15,12 +15,12 @@ export const GLogin = () => {
             headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({ username: values.username, password: values.password})
         };
-        fetch('http://localhost:1080/gbs/login', requestOptions)
+        fetch('http://localhost:1090/gbs/login', requestOptions)
             .then(response => response.text())
             .then(data => {
                 if (data.localeCompare("") !== 0) {
                     localStorage.setItem('gtoken', data)
-                    navigate("/", { replace: true });
+                    navigate("/gustave/", { replace: true });
                 }
             });
     };

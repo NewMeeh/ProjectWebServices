@@ -12,7 +12,7 @@ export const ELogin = () => {
     const onFinish = (values: any) => {
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin":"*" },
+            headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({ username: values.username, password: values.password})
         };
         fetch('http://localhost:1080/uge/login', requestOptions)
