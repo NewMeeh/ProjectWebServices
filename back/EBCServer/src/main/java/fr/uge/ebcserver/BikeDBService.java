@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -137,6 +138,10 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
     @Override
     public void remove(long bikeId) throws RemoteException {
         bikes.remove(bikeId);
+    }
+
+    public HashMap<String, String> getUserInfo(String token) {
+        return ugeService.getUserInfo(token);
     }
     //TODO displayinfoUser, mes vélo que je loue, mes vélo que j'utilise actuellement, mes vélo que je vend
 }
