@@ -3,7 +3,6 @@ package fr.uge.gustavebike;
 import fr.uge.bank.Bank;
 import fr.uge.bank.BankServiceLocator;
 import fr.uge.ebcserver.exception.ForbiddenException;
-import fr.uge.exchange.Exchange;
 import fr.uge.exchange.ExchangeService;
 import fr.uge.exchange.ExchangeServiceLocator;
 import fr.uge.rmi.common.Bike;
@@ -72,9 +71,10 @@ public class GustaveBikeDBService {
             if(user.getValue().isUser(gbUser.username()) && user.getValue().isPassword(gbUser.password())) {
                 var token = randomToken();
                 connectedUsers.put(token, user.getValue());
-                if (!allCarts.containsKey(gbUser.id)) {
+                logger.info(connectedUsers.toString());
+                if (!allCarts.containsKey(user.getKey())) {
                     var cart = new ArrayList<Bike>();
-                    allCarts.put(gbUser.id, cart);
+                    allCarts.put(user.getKey(), cart);
                 }
                 logger.info("login success token is " + token);
                 return token;
@@ -164,6 +164,7 @@ public class GustaveBikeDBService {
     @PostMapping("/myCart/{bikeId}")
     public void addToCart(@RequestHeader("gtoken") String gtoken, @PathVariable long bikeId) {
         var userId = checkValidAndGetId(gtoken);
+        logger.info(allCarts.toString());
         var userCart = allCarts.get(userId);
         try {
             var bike = bikeService.getSellBikeById(bikeId);
@@ -191,7 +192,10 @@ public class GustaveBikeDBService {
     public void emptyCart(@RequestHeader("gtoken") String gtoken) {
         var userId = checkValidAndGetId(gtoken);
         var userCart = allCarts.get(userId);
-        var bikes = userCart;
+        var bikes = new ArrayList<Bike>();
+        for (Bike b: userCart) {
+            bikes.add(b);
+        }
         userCart.removeAll(bikes);
         try {
             for (Bike bike: bikes) {
@@ -227,8 +231,9 @@ public class GustaveBikeDBService {
     }
 
     @GetMapping("/me")
-    public HashMap<String, String> getUserInfo(String token) throws RemoteException {
-        var userInfos = connectedUsers.get(token);
+    public HashMap<String, String> getUserInfo(@RequestHeader("gtoken") String gtoken) throws RemoteException {
+        var userInfos = connectedUsers.get(gtoken);
+        logger.info(userInfos.firstName);
         var ret = new HashMap<String, String>();
         ret.put("username", userInfos.username());
         ret.put("fname", userInfos.firstName());
