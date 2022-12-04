@@ -10,12 +10,13 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
 public class Exchange {
 	
 	private final Logger logger = Logger.getLogger(Exchange.class.getName());
-	private final Charset UTF8 = Charset.forName("UTF8");
+	private final Charset UTF8 = StandardCharsets.UTF_8;
 	
 	
 	public float exchange(String originCurrency, String targetCurrency, float amount) {
