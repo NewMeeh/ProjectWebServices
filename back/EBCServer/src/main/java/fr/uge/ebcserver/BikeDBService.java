@@ -141,7 +141,11 @@ public class BikeDBService extends UnicastRemoteObject implements IBikeDB {
     }
 
     public HashMap<String, String> getUserInfo(String token) {
-        return ugeService.getUserInfo(token);
+        try {
+            return ugeService.getUserInfo(token);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
     //TODO mes vélo que je loue, mes vélo que j'utilise actuellement, mes vélo que je vend
 }

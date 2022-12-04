@@ -88,7 +88,7 @@ public class UGEService extends UnicastRemoteObject implements IUGEDB {
     }
 
     @Override
-    public HashMap<String, String> getUserInfo(String token) {
+    public HashMap<String, String> getUserInfo(String token) throws RemoteException {
         var userInfos = connectedUsers.get(token);
         var ret = new HashMap<String, String>();
         ret.put("username", userInfos.username());

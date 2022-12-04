@@ -8,5 +8,5 @@ public interface IUGEDB extends Remote {
     long isTokenValid(String token) throws RemoteException;
     String getNameById(long id) throws RemoteException;
 
-    HashMap<String, String> getUserInfo(String token);
+    HashMap<String, String> getUserInfo(String token) throws RemoteException;
 }
