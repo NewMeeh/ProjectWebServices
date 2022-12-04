@@ -10,16 +10,19 @@ export const Login = () => {
     const handleRegisterClick = () => navigate("/register", { replace: true });
 
     const onFinish = (values: any) => {
-        //DoTheLoginThing + add token to localStorage
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin":"*" },
             body: JSON.stringify({ username: values.username, password: values.password})
         };
-        fetch('https://localhost:1080/login', requestOptions)
-            .then(response => response.json())
-            .then(data => this.setState({ postId: data.id }));
-        console.log('Success:ll');
+        fetch('http://localhost:1080/uge/login', requestOptions)
+            .then(response => response.text())
+            .then(data => {
+                if (data.localeCompare("") != 0) {
+                    localStorage.setItem('token', data)
+                    navigate("/", { replace: true });
+                }
+            });
     };
 
     const onFinishFailed = (errorInfo: any) => {

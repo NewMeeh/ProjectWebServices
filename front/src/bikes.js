@@ -9,17 +9,18 @@ export class Bike extends React.Component {
             owner: props.owner,
             price: props.price,
             rating: props.rating,
+            name: props.bikeName
         };
     }
 
     render() {
-        const title = this.state.owner + "'s bike";
+        const title = this.state.owner + "'s " + this.state.name ;
         return (
             <Col span={6}>
             <Card
                 hoverable
                 style={{width: 240, margin: "auto"}}
-                cover={<img alt="Bike" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"/>}
+                cover={<img alt="Bike" src="https://i0.wp.com/goodcobikeclub.com/wp-content/uploads/2020/07/qi-bin-w4hbafegiac-unsplash.jpg?ssl=1"/>}
             >
                 <Meta title={title} description={this.state.rating + " stars"}/>
                 <p className="price">{this.state.price + "$"}</p>
@@ -31,16 +32,37 @@ export class Bike extends React.Component {
 
 export class BikeList extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            itemList: null,
+        }
+    }
+    componentDidMount() {
+        const that = this;
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', "token":localStorage.getItem('token') },
+        };
+        fetch('http://localhost:1100/bikes', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                that.setState({itemList: data});
+            });
+    }
     createCard (index, item){
-        return <Bike key={index} owner={item.owner} price={item.price} rating={item.rating}/>;
+        return <Bike key={index} owner={item.ownerName} price={item.locationPrice} rating={item.avgGrade} owned={item.rented} bikeName={item.bikeName}/>;
     }
 
     render() {
-        const rq = JSON.parse('{"Bikes":[{"owner":"Thomas", "rating":5, "price":15},{"owner":"Julien", "rating":3, "price":25},{"owner":"Adrien", "rating":4, "price":10},{"owner":"Julien", "rating":5, "price":15},{"owner":"Julien", "rating":5, "price":15},{"owner":"Julien", "rating":5, "price":15},{"owner":"Julien", "rating":5, "price":15},{"owner":"Julien", "rating":5, "price":15}]}')
+        const rq = this.state.itemList;
         let itemList=[];
-        rq.Bikes.forEach((item, index)=>{
-            itemList.push( this.createCard(index, item) )
+        if (rq != null) {
+            rq.forEach((item, index) => {
+                itemList.push(this.createCard(index, item))
             })
+        }
         return(
             itemList
         );
