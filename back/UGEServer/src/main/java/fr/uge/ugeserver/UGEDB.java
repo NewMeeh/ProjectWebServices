@@ -26,8 +26,5 @@ public class UGEDB {
         ugeService.logout(token);
     }
 
-    @GetMapping("/me")
-    public HashMap<String, String> getUserInfo(@RequestHeader("token") String token) {return ugeService.getUserInfo(token);}
-
 
 }

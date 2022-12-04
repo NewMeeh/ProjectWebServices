@@ -210,5 +210,7 @@ public class GustaveBikeDBService {
         }
     }
 
-    //TODO displayinfoUser
+    /*public HashMap<String, String> getUserInfo(String token) {
+        return ugeService.getUserInfo(token);
+    }*/
 }
