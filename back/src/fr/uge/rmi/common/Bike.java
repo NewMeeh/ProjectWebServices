@@ -3,18 +3,21 @@ package fr.uge.rmi.common;
 import java.util.ArrayList;
 
 public class Bike {
+
     private final long bikeId;
     private final long ownerId;
     private String ownerName = null;
     private String bikeName = null;
     private String description = null;
-    private long userId = -1; // -1 if the bike is in the shop
+    private long userId = -1; // -1 if rentable -2 if bike is unRentable if >= 0 bike is already rent by someone
     private final float locationPrice;
+    private final float resalePrice;
     private boolean used = false;
     private final ArrayList<Long> waiters = new ArrayList<>();
     private final ArrayList<Integer> grades = new ArrayList<>();
 
-    public Bike(long ownerId1, String ownerName, long bikeId, String name, float LocationPrice, String desc) {
+
+    public Bike(long ownerId1, String ownerName, long bikeId, String name, float LocationPrice, float resalePrice, String desc) {
 
         if(ownerId1 < 0) throw new IllegalArgumentException("id must be > 0");
         this.ownerId = ownerId1;
@@ -25,6 +28,7 @@ public class Bike {
         this.bikeId = bikeId;
         this.bikeName = name;
         this.description = desc;
+        this.resalePrice = resalePrice;
     }
 
     private void use() {
@@ -42,13 +46,18 @@ public class Bike {
         return this.waiters.size();
     }
 
-    public void setNextUserId() {
-        this.userId = waiters.remove(0);
-    }
+    public void setNextUserId() {this.userId = waiters.remove(0);}
 
     public boolean isRented() {
-        return userId != -1;
+        return userId >= 0;
     }
+    public boolean isInCart() {
+        return userId == -2;
+    }
+
+    public void unRent() {if (userId == -1) userId = -2;}
+
+    public void reRent() {userId = -1;}
 
     public void addGrade(int grade){
         if (grade < 1 || grade > 5) throw new IllegalArgumentException("Grade must be between 1 and 5.");
@@ -66,7 +75,7 @@ public class Bike {
     public long getId() { return bikeId;}
 
     public void add(long userId) {
-        this.waiters.add(userId);
+        if(userId > -2) this.waiters.add(userId);
     }
 
 
@@ -119,6 +128,11 @@ public class Bike {
         }
         return total;
     }
+
+    public float getResalePrice() {
+        return resalePrice;
+    }
+
     @Override
     public String toString() {
        return new StringBuilder("\n{")
@@ -129,6 +143,7 @@ public class Bike {
                 .append("desc: "+ description + "\n")
                 .append("user_id: " + userId + "\n")
                 .append("location_price: " + locationPrice + "\n")
+                .append("resale_price: " + resalePrice + "\n")
                 .append("used: " + used + "\n")
                 .append("waiters: " + waiters + "\n")
                 .append("grades: " + grades + "\n")

@@ -15,7 +15,8 @@ public class BikeDB {
     private BikeDBService bikeDBService;
 
 
-    record BikeForm(String name, float locationPrice, String description){}
+    record BikeForm(String name, float locationPrice, float resalePrice, String description){
+    }
     @PutMapping
     public void addBike(@RequestHeader("token") String token, @RequestBody BikeForm bikeForm) {
         Objects.requireNonNull(token);
