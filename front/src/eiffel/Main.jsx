@@ -78,7 +78,7 @@ export const AddBike = (props) => {
             const requestOptions = {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json',  "token": localStorage.getItem('etoken')},
-                body: JSON.stringify({name: values.name, locationPrice: values.price, description: values.desc})
+                body: JSON.stringify({name: values.name, locationPrice: values.price, description: values.desc, resalePrice: values.sellPrice})
             };
             fetch('http://localhost:1100/bikes', requestOptions)
                 .then(response => response.text())
@@ -133,6 +133,14 @@ export const AddBike = (props) => {
                             <Form.Item
                                 label="Price"
                                 name="price"
+                                rules={[{required: true, message: 'Please input your Price!'}]}
+                            >
+                                <Input/>
+                            </Form.Item>
+
+                            <Form.Item
+                                label="ReSell Price"
+                                name="sellPrice"
                                 rules={[{required: true, message: 'Please input your Price!'}]}
                             >
                                 <Input/>

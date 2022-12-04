@@ -9,7 +9,7 @@ export class Bike extends React.Component {
             type: props.type,
             item: props.item,
             owner: props.item.ownerName,
-            price: props.item.locationPrice,
+            price: props.item.resalePrice,
             rating: props.item.avgGrade,
             name: props.item.bikeName
         };
@@ -163,7 +163,7 @@ const BikeDesc = (props) => {
                 <p>{props.item.description}</p>
                 <br/>
                 <p>Disponible : {props.item.rented === false ? "Oui" : "Non"}</p>
-                <p>Prix : {props.item.locationPrice}$</p>
+                <p>Prix : {props.item.resalePrice}$</p>
                 <p>Note : {props.item.avgGrade} stars ({props.item.grades.length} avis)</p>
             </Modal>
         </>

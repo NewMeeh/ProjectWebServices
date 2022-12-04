@@ -1,5 +1,5 @@
 import { Layout,} from 'antd';
-import { Divider, Row } from 'antd';
+import { Divider, Row, Button } from 'antd';
 import {BikeList} from './bikes'
 import 'antd/dist/reset.css';
 import "./index.css";
@@ -31,8 +31,8 @@ export const GPanier = () => {
             });
     },[]);
 
-    const onClick = (e) => {
-        navigate("/"+e.key);
+    const onClick = () => {
+        navigate("/gustave/pay");
     };
 
     return (
@@ -48,7 +48,8 @@ export const GPanier = () => {
                     </div>
                     <Divider orientation="right">Total</Divider>
                     <div style={{'textAlign':'right','padding':'10px 20px 10px 20px'}}>
-                        xxx$
+                        {price}$
+                        <Button type="primary" onClick={onClick} key={"pay"}>Pay</Button>
                     </div>
                 </Content>
             </Layout>
