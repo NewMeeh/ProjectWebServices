@@ -8,6 +8,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.logo {
+  float: left;
+  color: aliceblue;
+  font-family: "Roboto", sans-serif;
+  font-weight: bold;
+}
+
 .App {
   padding: 20px;
 }

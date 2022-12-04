@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import MenuBar from './MenuBar'
 const { Header, Footer, Content } = Layout;
 
-export const Profile = () => {
+export const Panier = () => {
 
     const [usr, setUsr] = useState(0);
 
@@ -39,18 +39,14 @@ export const Profile = () => {
             <MenuBar/>
             <Layout>
                 <Content>
-                    <Divider orientation="left">Info</Divider>
+                    <Divider orientation="left">Panier</Divider>
                     <div style={{'padding':'10px 20px 10px 20px'}}>
                         <p>Salut c'est Ninho</p>
                     </div>
-                    <Divider orientation="left">My Bikes</Divider>
-                    <Row gutter={[16, 16]} justify="space-between" align="middle">
-                        <BikeList />
-                    </Row>
-                    <Divider orientation="left">Rented Bikes</Divider>
-                    <Row gutter={[16, 16]} justify="space-between" align="middle">
-                        <BikeList />
-                    </Row>
+                    <Divider orientation="right">Total</Divider>
+                    <div style={{'textAlign':'right','padding':'10px 20px 10px 20px'}}>
+                        xxx$
+                    </div>
                 </Content>
             </Layout>
             <Footer><Divider orientation="right">UGEBikes3000 all rights reserved</Divider></Footer>
