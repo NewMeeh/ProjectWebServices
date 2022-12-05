@@ -9,7 +9,7 @@ export const MenuBar = () => {
 
     const navigate = useNavigate();
     const onClick = (e) => {
-        navigate("/gustave/"+e.key);
+        navigate(""+e.key);
     };
 
     return(
@@ -19,7 +19,7 @@ export const MenuBar = () => {
             onClick={onClick}
             theme="dark"
             mode="horizontal"
-            items={[{label: 'Acceuil', key: ''}, {label: 'Profile', key: 'profile'},{label: 'Panier', key: 'Panier'}]}
+            items={[{label: 'Accueil', key: '/gustave/'}, {label: 'Profile', key: '/gustave/profile'},{label: 'Panier', key: '/gustave/Panier'},{label: 'Internes', key: '/eiffel'}]}
         />
     </Header>
     );

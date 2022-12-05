@@ -1,17 +1,11 @@
 import { Button, Form, Input, Tooltip, DatePicker} from 'antd';
 import 'antd/dist/reset.css';
 import "./index.css";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {getToken} from './Main'
 import { useNavigate } from 'react-router-dom';
 
 export const GPayment = () => {
-
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: 'React POST Request Example' })
-    };
 
     const NumericInput = (props) => {
         const {value, onChange} = props;
@@ -44,17 +38,47 @@ export const GPayment = () => {
         );
     }
 
+    const [price, setPrice] = useState(false);
     const navigate = useNavigate();
+    const [date, setDate] = useState(false);
+
+    function onSelectDate(date, dateString) {
+        console.log(date, dateString);
+        setDate(dateString);
+    }
+
     useEffect(() => {
+        setPrice(0);
         if (!getToken()) {
             navigate("/gustave/login");
         }
-    });
+        const that = this;
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', "gtoken":localStorage.getItem('gtoken') },
+            body: {}
+        };
+        fetch('http://localhost:1090/gbs/myCart/total', requestOptions)
+            .then(response => response.text())
+            .then(data => {
+                setPrice(data);
+            });
+    },[])
 
     const onFinish = (values: any) => {
-        //DoTheLoginThing + add token to localStorage
-        var j = JSON.stringify({ username: values.username, password: values.password})
-        console.log('Success:', j);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', "gtoken":localStorage.getItem('gtoken') },
+            body:  JSON.stringify({cardNumber:values.cardnb, expirationDate:date, cvv:values.cvc})
+        };
+        console.log(requestOptions.body)
+        fetch('http://localhost:1090/gbs/myCart/buy', requestOptions)
+            .then(response => response.text())
+            .then(data => {
+                setTimeout(() => {}, 3000);
+                navigate("/gustave");
+            });
+
     };
 
     const monthFormat = 'MM/YY';
@@ -67,6 +91,7 @@ export const GPayment = () => {
         <div style={{"margin": "auto","width":" 50%","padding": "10px", "border":"1px solid turquoise", "borderRadius":"3px"}}>
             <h2 style={{"textAlign":"center","fontWeight":"900", "color":"#333333"}}>UGEPay</h2>
             <div style={{"margin": "auto","width":" 80%","padding": "10px"}}>
+                <h2>Total : {price}$</h2>
                 <h3 style={{"fontWeight":"900", "color":"#333333"}}>Carte de crédit</h3>
                 <Form
                     name="basic"
@@ -76,13 +101,12 @@ export const GPayment = () => {
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off">
-
                     <Form.Item
                         label="Numéro de la carte"
-                        name="username"
+                        name="cardnb"
                         rules={[{ required: true, message: 'Please input your cardNumber!' }]}
                     >
-                        <NumericInput placeholder="1234 1234 1234 1234"/>
+                        <Input placeholder="1234 1234 1234 1234"/>
                     </Form.Item>
                     <Input.Group compact>
                         <Form.Item
@@ -90,7 +114,7 @@ export const GPayment = () => {
                             name="expDate"
                             rules={[{ required: true, message: 'Please input your expiration date!' }]}
                         >
-                            <DatePicker format={monthFormat} picker="month" placeholder="12/22"/>
+                            <DatePicker format={monthFormat} onChange={onSelectDate} picker="month" placeholder="12/22"/>
                         </Form.Item>
 
                         <Form.Item

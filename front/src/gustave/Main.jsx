@@ -32,10 +32,9 @@ export const GMain = () => {
                 <MenuBar/>
                 <Layout>
                     <Content>
-                        <Divider><AddBike></AddBike></Divider>
                         <Divider orientation="left">Bikes</Divider>
                         <Row gutter={[16, 16]} justify="space-between" align="middle">
-                            <BikeList request={""} type={1}/>
+                            <BikeList request={"/bikes"} type={1}/>
                         </Row>
                     </Content>
                 </Layout>
@@ -64,7 +63,7 @@ export const AddBike = (props) => {
             }, 3000);
             const requestOptions = {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json', "gtoken": localStorage.getItem('token')},
+                headers: {'Content-Type': 'application/json', "gtoken": localStorage.getItem('gtoken')},
                 body: props.item.bikeId
             };
             fetch('http://localhost:1100/bikes/rent', requestOptions)
@@ -77,7 +76,7 @@ export const AddBike = (props) => {
         const onFinish = (values: any) => {
             const requestOptions = {
                 method: 'PUT',
-                headers: {'Content-Type': 'application/json',  "gtoken": localStorage.getItem('token')},
+                headers: {'Content-Type': 'application/json',  "gtoken": localStorage.getItem('gtoken')},
                 body: JSON.stringify({name: values.name, locationPrice: values.price, description: values.desc})
             };
             fetch('http://localhost:1100/bikes', requestOptions)

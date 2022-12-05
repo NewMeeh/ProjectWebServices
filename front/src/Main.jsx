@@ -18,9 +18,11 @@ export const Main = () => {
         <Layout>
             <Layout>
                 <Content>
-                    <Divider>Welcome</Divider>
-                    <Button onClick={buyClick}>Buy</Button>
-                    <Button onClick={rentClick}>Rent</Button>
+                    <Divider>Bienvenue</Divider>
+                    <div style={{"textAlign": "center"}}>
+                    <Button onClick={buyClick}>Externes</Button>
+                    <Button onClick={rentClick}>Internes</Button>
+                    </div>
                 </Content>
             </Layout>
             <Footer><Divider orientation="right">UGEBikes3000 all rights reserved</Divider></Footer>

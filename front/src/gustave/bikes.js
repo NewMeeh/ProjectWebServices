@@ -9,7 +9,7 @@ export class Bike extends React.Component {
             type: props.type,
             item: props.item,
             owner: props.item.ownerName,
-            price: props.item.locationPrice,
+            price: props.item.resalePrice,
             rating: props.item.avgGrade,
             name: props.item.bikeName
         };
@@ -23,7 +23,7 @@ export class Bike extends React.Component {
             headers: { 'Content-Type': 'application/json', "gtoken":localStorage.getItem('gtoken') },
         };
         console.log("this is "+ that.state);
-        fetch('http://localhost:1090/myCart/'+this.state.item.bikeId, requestOptions)
+        fetch('http://localhost:1090/gbs/myCart/'+this.state.item.bikeId, requestOptions)
             .then(response => response.text())
             .then(data => {
                 window.location.reload(false);
@@ -82,11 +82,14 @@ export class BikeList extends React.Component {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', "gtoken":localStorage.getItem('gtoken') },
         };
-        fetch('http://localhost:1090/bikes'+this.state.request, requestOptions)
+        fetch('http://localhost:1090/gbs'+this.state.request, requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                that.setState({itemList: data});
+                if (data.error !== undefined)
+                    that.setState({itemList: null});
+                else
+                    that.setState({itemList: data});
             });
     }
 
@@ -95,7 +98,10 @@ export class BikeList extends React.Component {
     }
 
     render() {
+        if (this.state.itemList === undefined)
+            return (<></>);
         const rq = this.state.itemList;
+        console.log(rq);
         let itemList=[];
         if (rq != null) {
             rq.forEach((item, index) => {
@@ -125,12 +131,9 @@ const BikeDesc = (props) => {
             headers: { 'Content-Type': 'application/json', "gtoken":localStorage.getItem('gtoken') },
             body: props.item.bikeId
         };
-        //Todo
-        fetch('http://localhost:1090/gbs/???', requestOptions)
+        fetch('http://localhost:1090/gbs/myCart/'+props.item.bikeId, requestOptions)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
-
             });
     };
     const handleCancel = () => {
@@ -153,14 +156,14 @@ const BikeDesc = (props) => {
                         Return
                     </Button>,
                     <Button key="rent" loading={loading} onClick={handleOk}>
-                        {props.item.rented === false ? "Rent" : "WaitingList"}
+                        Add to cart
                     </Button>,
                 ]}
             >
                 <p>{props.item.description}</p>
                 <br/>
                 <p>Disponible : {props.item.rented === false ? "Oui" : "Non"}</p>
-                <p>Prix : {props.item.locationPrice}$</p>
+                <p>Prix : {props.item.resalePrice}$</p>
                 <p>Note : {props.item.avgGrade} stars ({props.item.grades.length} avis)</p>
             </Modal>
         </>

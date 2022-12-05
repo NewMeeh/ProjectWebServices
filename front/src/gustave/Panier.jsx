@@ -1,34 +1,38 @@
 import { Layout,} from 'antd';
-import { Divider } from 'antd';
+import { Divider, Row, Button } from 'antd';
 import {BikeList} from './bikes'
 import 'antd/dist/reset.css';
 import "./index.css";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {getToken} from './Main'
 import { useNavigate } from 'react-router-dom';
 import MenuBar from './MenuBar'
 const {Footer, Content } = Layout;
 
 export const GPanier = () => {
+
+    const [price, setPrice] = useState(false);
     const navigate = useNavigate();
     useEffect(() => {
+        setPrice(0);
         if (!getToken()) {
             navigate("/gustave/login");
         }
+        const that = this;
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', },
-            body: JSON.stringify({ username: ".", password: "."})
+            headers: { 'Content-Type': 'application/json', "gtoken":localStorage.getItem('gtoken') },
+            body: {}
         };
-        fetch('http://localhost:1080/userInfo', requestOptions)
+        fetch('http://localhost:1090/gbs/myCart/total', requestOptions)
             .then(response => response.text())
             .then(data => {
-
+                setPrice(data);
             });
-    });
+    },[]);
 
-    const onClick = (e) => {
-        navigate("/"+e.key);
+    const onClick = () => {
+        navigate("/gustave/pay");
     };
 
     return (
@@ -38,11 +42,14 @@ export const GPanier = () => {
                 <Content>
                     <Divider orientation="left">Panier</Divider>
                     <div style={{'padding':'10px 20px 10px 20px'}}>
-                        <p>Salut c'est Ninho</p>
+                        <Row gutter={[48, 16]} justify="space-between" align="middle">
+                            <BikeList request={"/myCart"} type={2}/>
+                        </Row>
                     </div>
                     <Divider orientation="right">Total</Divider>
                     <div style={{'textAlign':'right','padding':'10px 20px 10px 20px'}}>
-                        xxx$
+                        {price}$
+                        <Button type="primary" onClick={onClick} key={"pay"}>Pay</Button>
                     </div>
                 </Content>
             </Layout>

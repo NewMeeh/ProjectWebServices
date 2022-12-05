@@ -116,7 +116,10 @@ export class BikeList extends React.Component {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                that.setState({itemList: data});
+                if (data.error !== undefined)
+                    that.setState({itemList: null});
+                else
+                    that.setState({itemList: data});
             });
     }
 
