@@ -116,13 +116,14 @@ public class GustaveBikeDBService {
         logger.info("logout previous token were " + gtoken);
     }
 
+    record RegisterForm(String userName, String pwd, String fname, String lname, String mail){}
     @PostMapping(value = "/signIn")
-    public void signIn(String userName, String pwd, String fname, String lname, String mail) {
+    public void signIn(@RequestBody RegisterForm registerForm) {
         /*
         * permet une inscription
         */
-        if(users.values().stream().noneMatch(user -> user.username == userName || user.mail == mail)) {
-            users.put((long) users.size(), new GBUser((long) users.size(), userName, pwd, fname, lname, mail));
+        if(users.values().stream().noneMatch(user -> user.username == registerForm.userName() || user.mail == registerForm.mail())) {
+            users.put((long) users.size(), new GBUser((long) users.size(), registerForm.userName(), registerForm.pwd(), registerForm.fname(), registerForm.lname(), registerForm.mail()));
         }
     }
 
