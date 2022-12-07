@@ -118,13 +118,15 @@ public class GustaveBikeDBService {
 
     record RegisterForm(String userName, String pwd, String fname, String lname, String mail){}
     @PostMapping(value = "/signIn")
-    public void signIn(@RequestBody RegisterForm registerForm) {
+    public int signIn(@RequestBody RegisterForm registerForm) {
         /*
         * permet une inscription
         */
-        if(users.values().stream().noneMatch(user -> user.username == registerForm.userName() || user.mail == registerForm.mail())) {
+        if(users.values().stream().noneMatch(user -> Objects.equals(user.username, registerForm.userName()) || Objects.equals(user.mail, registerForm.mail()))) {
             users.put((long) users.size(), new GBUser((long) users.size(), registerForm.userName(), registerForm.pwd(), registerForm.fname(), registerForm.lname(), registerForm.mail()));
+            return 1;
         }
+        return 0;
     }
 
 

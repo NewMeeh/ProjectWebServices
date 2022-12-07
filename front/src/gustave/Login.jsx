@@ -80,13 +80,13 @@ export const GRegister = () => {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({ username: values.username, password: values.password, email:values.email
-                                    ,tel:values.tel, age:values.age})
+            body: JSON.stringify({ userName: values.username, pwd: values.password, mail:values.email
+                                    ,tel:values.tel, age:values.age, fname:values.fname, lname:values.lname, otherInformations:""})
         };
         fetch('http://localhost:1090/gbs/signIn', requestOptions)
             .then(response => response.text())
             .then(data => {
-                if (data.localeCompare("") !== 0) {
+                if (data.localeCompare("0") !== 0) {
                     navigate("/gustave/login", { replace: true });
                 }
             });
@@ -122,6 +122,22 @@ export const GRegister = () => {
                     rules={[{ required: true, message: 'Please input your password!' }]}
                 >
                     <Input.Password />
+                </Form.Item>
+
+                <Form.Item
+                    label="First Name"
+                    name="fname"
+                    rules={[{ required: true, message: 'Please input your FName!' }]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="Last Name"
+                    name="lname"
+                    rules={[{ required: true, message: 'Please input your Last Name!' }]}
+                >
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
